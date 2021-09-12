@@ -2,12 +2,13 @@
 
 namespace App\Http\Controllers\API;
 
-use App\Models\Industry;
+use App\Http\Controllers\Controller;
 use App\Http\Controllers\API\APIBaseController;
+use App\Models\KPIActivity;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 
-class APIIndustryController extends APIBaseController
+class APIKPIActivityController extends APIBaseController
 {
     /**
      * Display a listing of the resource.
@@ -16,8 +17,8 @@ class APIIndustryController extends APIBaseController
      */
     public function index()
     {
-        $industries = Industry::all();
-        return $this->sendResponse($industries);
+      $kpi_activities = KPIActivity::all();
+      return $this->sendResponse($kpi_activities);
     }
 
     /**
@@ -29,14 +30,14 @@ class APIIndustryController extends APIBaseController
     public function store(Request $request)
     {
       $this->validate($request, [
-          'name' => 'required|unique:industries,name,NULL,id,deleted_at,NULL',
+          'name' => 'required|unique:k_p_i_activities,name,NULL,id,deleted_at,NULL',
       ]);
-      $industry = new Industry([
+      $kpi_activity = new KPIActivity([
           'id' => Str::uuid(),
           'name' => $request->get('name')
       ]);
-      $industry->save();
-      return $this->sendResponse($industry);
+      $kpi_activity->save();
+      return $this->sendResponse($kpi_activity);
     }
 
     /**
@@ -47,11 +48,11 @@ class APIIndustryController extends APIBaseController
      */
     public function show($id)
     {
-      $industry = Industry::find($id);
-      if ($industry) {
-        return $this->sendResponse($industry);
+      $kpi_activity = KPIActivity::find($id);
+      if ($kpi_activity) {
+        return $this->sendResponse($kpi_activity);
       } else {
-        return $this->sendError(["message" => "Industry not found"], 404);
+        return $this->sendError(["message" => "KPIActivity not found"], 404);
       }
     }
 
@@ -65,15 +66,15 @@ class APIIndustryController extends APIBaseController
     public function update(Request $request, $id)
     {
       $this->validate($request, [
-          'name' => 'required|unique:industries,name',
+          'name' => 'required|unique:k_p_i_activities,name',
       ]);
-      $industry = Industry::find($id);
-      if ($industry) {
-        $industry->name = $request->get('name');
-        $industry->save();
-        return $this->sendResponse($industry);
+      $kpi_activity = KPIActivity::find($id);
+      if ($kpi_activity) {
+        $kpi_activity->name = $request->get('name');
+        $kpi_activity->save();
+        return $this->sendResponse($kpi_activity);
       } else {
-        return $this->sendError(["message" => "Industry not found"], 404);
+        return $this->sendError(["message" => "KPIActivity not found"], 404);
       }
     }
 
@@ -85,12 +86,12 @@ class APIIndustryController extends APIBaseController
      */
     public function destroy($id)
     {
-      $industry = Industry::find($id);
-      if ($industry) {
-        $industry = $industry->delete();
-        return $this->sendResponse($industry);
+      $kpi_activity = KPIActivity::find($id);
+      if ($kpi_activity) {
+        $kpi_activity = $kpi_activity->delete();
+        return $this->sendResponse($kpi_activity);
       } else {
-        return $this->sendError(["message" => "Industry not found"], 404);
+        return $this->sendError(["message" => "KPIActivity not found"], 404);
       }
     }
 }

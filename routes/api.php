@@ -4,6 +4,7 @@ use App\Http\Controllers\API\AuthController;
 use App\Http\Controllers\API\APIPackageController;
 use App\Http\Controllers\API\APIIndustryController;
 use App\Http\Controllers\API\APITerritoryController;
+use App\Http\Controllers\API\APIKPIActivityController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -29,4 +30,5 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::apiResource('packages', APIPackageController::class);
     Route::apiResource('industries', APIIndustryController::class);
     Route::apiResource('territories', APITerritoryController::class);
+    Route::apiResource('kpi-activities', APIKPIActivityController::class);
 });
