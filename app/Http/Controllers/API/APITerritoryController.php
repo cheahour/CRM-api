@@ -2,12 +2,13 @@
 
 namespace App\Http\Controllers\API;
 
-use App\Models\Industry;
+use App\Http\Controllers\Controller;
 use App\Http\Controllers\API\APIBaseController;
+use App\Models\Territory;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 
-class APIIndustryController extends APIBaseController
+class APITerritoryController extends APIBaseController
 {
     /**
      * Display a listing of the resource.
@@ -16,8 +17,8 @@ class APIIndustryController extends APIBaseController
      */
     public function index()
     {
-        $industries = Industry::all();
-        return $this->sendResponse($industries);
+        $territories = Territory::all();
+        return $this->sendResponse($territories);
     }
 
     /**
@@ -29,14 +30,14 @@ class APIIndustryController extends APIBaseController
     public function store(Request $request)
     {
       $this->validate($request, [
-          'name' => 'required|unique:industries,name,NULL,id,deleted_at,NULL',
+          'name' => 'required|unique:territories,name,NULL,id,deleted_at,NULL',
       ]);
-      $industry = new Industry([
-          // 'id' => Str::uuid(),
+      $territory = new Territory([
+          'id' => Str::uuid(),
           'name' => $request->get('name')
       ]);
-      $industry->save();
-      return $this->sendResponse($industry);
+      $territory->save();
+      return $this->sendResponse($territory);
     }
 
     /**
@@ -47,11 +48,11 @@ class APIIndustryController extends APIBaseController
      */
     public function show($id)
     {
-      $industry = Industry::find($id);
-      if ($industry) {
-        return $this->sendResponse($industry);
+      $territory = Territory::find($id);
+      if ($territory) {
+        return $this->sendResponse($territory);
       } else {
-        return $this->sendError(["message" => "Industry not found"], 404);
+        return $this->sendError(["message" => "Territory not found"], 404);
       }
     }
 
@@ -65,15 +66,15 @@ class APIIndustryController extends APIBaseController
     public function update(Request $request, $id)
     {
       $this->validate($request, [
-          'name' => 'required|unique:industries,name',
+          'name' => 'required|unique:territories,name',
       ]);
-      $industry = Industry::find($id);
-      if ($industry) {
-        $industry->name = $request->get('name');
-        $industry->save();
-        return $this->sendResponse($industry);
+      $territory = Territory::find($id);
+      if ($territory) {
+        $territory->name = $request->get('name');
+        $territory->save();
+        return $this->sendResponse($territory);
       } else {
-        return $this->sendError(["message" => "Industry not found"], 404);
+        return $this->sendError(["message" => "Territory not found"], 404);
       }
     }
 
@@ -85,12 +86,12 @@ class APIIndustryController extends APIBaseController
      */
     public function destroy($id)
     {
-      $industry = Industry::find($id);
-      if ($industry) {
-        $industry = $industry->delete();
-        return $this->sendResponse($industry);
+      $territory = Territory::find($id);
+      if ($territory) {
+        $territory = $territory->delete();
+        return $this->sendResponse($territory);
       } else {
-        return $this->sendError(["message" => "Industry not found"], 404);
+        return $this->sendError(["message" => "Territory not found"], 404);
       }
     }
 }

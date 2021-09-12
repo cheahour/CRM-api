@@ -29,7 +29,7 @@ class APIPackageController extends APIBaseController
     public function store(Request $request)
     {
         $this->validate($request, [
-            'name' => 'required|unique:packages,name',
+            'name' => 'required|unique:packages,name,NULL,id,deleted_at,NULL',
         ]);
         $package = new Package([
             'id' => Str::uuid(),
@@ -37,6 +37,22 @@ class APIPackageController extends APIBaseController
         ]);
         $package->save();
         return $this->sendResponse($package);
+    }
+
+    /**
+     * Display the specified resource.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function show($id)
+    {
+      $package = Package::find($id);
+      if ($package) {
+        return $this->sendResponse($package);
+      } else {
+        return $this->sendError(["message" => "Package not found"], 404);
+      }
     }
 
     /**
@@ -49,7 +65,7 @@ class APIPackageController extends APIBaseController
     public function update(Request $request, $id)
     {
         $this->validate($request, [
-            'name' => 'required',
+            'name' => 'required|unique:packages,name',
         ]);
         $package = Package::find($id);
         if ($package) {
