@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\API;
 
 use App\Models\Package;
+use App\Http\Controllers\API\APIBaseController;
 use Facade\FlareClient\Http\Response;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
