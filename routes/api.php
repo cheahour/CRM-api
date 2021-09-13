@@ -3,6 +3,7 @@
 use App\Http\Controllers\API\AuthController;
 use App\Http\Controllers\API\APIPackageController;
 use App\Http\Controllers\API\APIIndustryController;
+use App\Http\Controllers\API\APIPipelineController;
 use App\Http\Controllers\API\APITerritoryController;
 use App\Http\Controllers\API\APIKPIActivityController;
 use Illuminate\Http\Request;
@@ -31,4 +32,5 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::apiResource('industries', APIIndustryController::class);
     Route::apiResource('territories', APITerritoryController::class);
     Route::apiResource('kpi-activities', APIKPIActivityController::class);
+    Route::apiResource('pipelines', APIPipelineController::class);
 });
