@@ -51,7 +51,7 @@ class APIPipelineController extends APIBaseController
     public function show($id)
     {
       $pipeline = Pipeline::find($id);
-      if ($territory) {
+      if ($pipeline) {
         return $this->sendResponse($pipeline);
       } else {
         return $this->sendError(["message" => "Pipeline not found"], 404);
