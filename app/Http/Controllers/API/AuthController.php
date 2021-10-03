@@ -11,6 +11,11 @@ use Illuminate\Support\Str;
 
 class AuthController extends APIBaseController
 {
+    /**
+     * @group Authentication
+     * @bodyParam   email    string  required
+     * @bodyParam   password    string  required
+     */
     function login(Request $request)
     {
         $user= User::where('email', $request->email)->first();
@@ -26,6 +31,15 @@ class AuthController extends APIBaseController
         return $this->sendResponse($response);
     }
 
+    /**
+     * @group User management
+     * @header Authorization Bearer {token}
+     * @authenticated
+     * Create sale-manager/sale
+     * @bodyParam   name    string  required
+     * @bodyParam   email    string  required
+     * @bodyParam   password    string  required
+     */
     function create_user(Request $request) {
         $request->validate([
             'name' => 'required|string',
@@ -48,6 +62,9 @@ class AuthController extends APIBaseController
 
     }
 
+    /**
+     * @group Authentication
+     */
     public function logout()
     {
         auth()->user()->tokens()->delete();

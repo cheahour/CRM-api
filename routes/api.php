@@ -23,14 +23,13 @@ use Illuminate\Support\Facades\Route;
 // Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 //     return $request->user();
 // });
-Route::apiResource('territories', APITerritoryController::class);
 Route::post("login",[AuthController::class,'login']);
 Route::middleware('auth:sanctum')->group(function () {
     Route::post('users', [AuthController::class, 'create_user']);
     Route::delete('users', [AuthController::class, 'logout']);
     Route::apiResource('packages', APIPackageController::class);
     Route::apiResource('industries', APIIndustryController::class);
-    // Route::apiResource('territories', APITerritoryController::class);
+    Route::apiResource('territories', APITerritoryController::class);
     Route::apiResource('kpi-activities', APIKPIActivityController::class);
     Route::apiResource('pipelines', APIPipelineController::class);
 });

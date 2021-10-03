@@ -11,9 +11,10 @@ use Illuminate\Support\Str;
 class APIPipelineController extends APIBaseController
 {
     /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
+     * @group Pipelines
+     * @header Authorization Bearer {token}
+     * @authenticated
+     * @responseFile status=201 storage/responses/pipelines.get.json
      */
     public function index()
     {
@@ -22,10 +23,11 @@ class APIPipelineController extends APIBaseController
     }
 
     /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
+     * @group Pipelines
+     * @header Authorization Bearer {token}
+     * @authenticated
+     * @bodyParam   name    string  required
+     * @responseFile status=201 storage/responses/pipeline.get.json
      */
     public function store(Request $request)
     {
@@ -43,10 +45,11 @@ class APIPipelineController extends APIBaseController
     }
 
     /**
-     * Display the specified resource.
-     *
+     * @group Pipelines
+     * @header Authorization Bearer {token}
+     * @authenticated
      * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @responseFile status=201 storage/responses/pipeline.get.json
      */
     public function show($id)
     {
@@ -59,11 +62,12 @@ class APIPipelineController extends APIBaseController
     }
 
     /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
+     * @group Pipelines
+     * @header Authorization Bearer {token}
+     * @authenticated
      * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @bodyParam   name    string  required
+     * @response 201 true
      */
     public function update(Request $request, $id)
     {
@@ -83,10 +87,11 @@ class APIPipelineController extends APIBaseController
     }
 
     /**
-     * Remove the specified resource from storage.
-     *
+     * @group Pipelines
+     * @header Authorization Bearer {token}
+     * @authenticated
      * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @response 201 true
      */
     public function destroy($id)
     {

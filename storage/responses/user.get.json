@@ -1,0 +1,8 @@
+{
+    "user": {
+        "name": "Test",
+        "email": "test@test.com",
+        "is_admin": 1
+    },
+    "token": "17|WAm9gtKrDA1437OmWzqgRBSZyfzpFoIyxA3V7Spe"
+}
