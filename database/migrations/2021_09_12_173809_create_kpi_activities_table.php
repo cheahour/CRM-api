@@ -13,7 +13,7 @@ class CreateKPIActivitiesTable extends Migration
      */
     public function up()
     {
-        Schema::create('k_p_i_activities', function (Blueprint $table) {
+        Schema::create('kpi_activities', function (Blueprint $table) {
             $table->uuid('id')->primary();
             $table->string('name');
             $table->timestamps();
@@ -28,6 +28,6 @@ class CreateKPIActivitiesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('k_p_i_activities');
+        Schema::dropIfExists('kpi_activities');
     }
 }
