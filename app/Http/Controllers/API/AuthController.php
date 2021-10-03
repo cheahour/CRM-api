@@ -20,9 +20,10 @@ class AuthController extends APIBaseController
     {
         $user= User::where('email', $request->email)->first();
         if (!$user || !Hash::check($request->password, $user->password)) {
-            return $this->sendError(['These credentials do not match our records.']);
+            return $this->sendError('These credentials do not match our records.');
         }
-        $token = $user->createToken(12345)->plainTextToken;
+
+        $token = $user->createToken(Str::uuid())->plainTextToken;
         $response = [
             'user' => new AuthResource($user),
             'token' => $token
