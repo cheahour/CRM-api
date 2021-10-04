@@ -4,11 +4,11 @@ namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\API\APIBaseController;
-use App\Models\KPIActivity;
+use App\Models\KpiActivity;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 
-class APIKPIActivityController extends APIBaseController
+class APIKpiActivityController extends APIBaseController
 {
     /**
      * @group KPI Activities
@@ -18,7 +18,7 @@ class APIKPIActivityController extends APIBaseController
      */
     public function index()
     {
-      $kpi_activities = KPIActivity::all();
+      $kpi_activities = KpiActivity::all();
       return $this->sendResponse($kpi_activities);
     }
 
@@ -32,9 +32,9 @@ class APIKPIActivityController extends APIBaseController
     public function store(Request $request)
     {
       $this->validate($request, [
-          'name' => 'required|unique:k_p_i_activities,name,NULL,id,deleted_at,NULL',
+          'name' => 'required|unique:kpi_activities,name,NULL,id,deleted_at,NULL',
       ]);
-      $kpi_activity = new KPIActivity([
+      $kpi_activity = new KpiActivity([
           'id' => Str::uuid(),
           'name' => $request->get('name')
       ]);
@@ -51,11 +51,11 @@ class APIKPIActivityController extends APIBaseController
      */
     public function show($id)
     {
-      $kpi_activity = KPIActivity::find($id);
+      $kpi_activity = KpiActivity::find($id);
       if ($kpi_activity) {
         return $this->sendResponse($kpi_activity);
       } else {
-        return $this->sendError(["message" => "KPIActivity not found"], 404);
+        return $this->sendError(["message" => "KpiActivity not found"], 404);
       }
     }
 
@@ -70,15 +70,15 @@ class APIKPIActivityController extends APIBaseController
     public function update(Request $request, $id)
     {
       $this->validate($request, [
-          'name' => 'required|unique:k_p_i_activities,name',
+          'name' => 'required|unique:kpi_activities,name',
       ]);
-      $kpi_activity = KPIActivity::find($id);
+      $kpi_activity = KpiActivity::find($id);
       if ($kpi_activity) {
         $kpi_activity->name = $request->get('name');
         $kpi_activity->save();
         return $this->sendResponse($kpi_activity);
       } else {
-        return $this->sendError(["message" => "KPIActivity not found"], 404);
+        return $this->sendError(["message" => "KpiActivity not found"], 404);
       }
     }
 
@@ -91,12 +91,12 @@ class APIKPIActivityController extends APIBaseController
      */
     public function destroy($id)
     {
-      $kpi_activity = KPIActivity::find($id);
+      $kpi_activity = KpiActivity::find($id);
       if ($kpi_activity) {
         $kpi_activity = $kpi_activity->delete();
         return $this->sendResponse($kpi_activity);
       } else {
-        return $this->sendError(["message" => "KPIActivity not found"], 404);
+        return $this->sendError(["message" => "KpiActivity not found"], 404);
       }
     }
 }
