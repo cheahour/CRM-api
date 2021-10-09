@@ -6,6 +6,8 @@ use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
+use App\Models\Role;
+use App\Models\User;
 
 class UserSeeder extends Seeder
 {
@@ -16,42 +18,41 @@ class UserSeeder extends Seeder
      */
     public function run()
     {
-        DB::table('users')->insert([
-            [
-                'id' => Str::uuid(),
-                'name' => 'Manager',
-                'email' => 'super@manager.com',
-                'password' => Hash::make('12345'),
-                'is_admin' => true,
-            ],
-            [
-                'id' => Str::uuid(),
-                'name' => 'Sale manager 1',
-                'email' => 'sale@manger1.com',
-                'password' => Hash::make('12345'),
-                'is_admin' => true,
-            ],
-            [
-                'id' => Str::uuid(),
-                'name' => 'Sale manager 2',
-                'email' => 'sale@manger2.com',
-                'password' => Hash::make('12345'),
-                'is_admin' => true,
-            ],
-            [
-                'id' => Str::uuid(),
-                'name' => 'Sale 1',
-                'email' => 'sale1@test.com',
-                'password' => Hash::make('12345'),
-                'is_admin' => true,
-            ],
-            [
-                'id' => Str::uuid(),
-                'name' => 'Sale 2',
-                'email' => 'sale2@test.com',
-                'password' => Hash::make('12345'),
-                'is_admin' => true,
-            ]
+      $managerRole = Role::whereName("Manager")->firstOrFail();
+      $saleManagerRole = Role::whereName("Sale-manager")->firstOrFail();
+      $saleRole = Role::whereName("Sale")->firstOrFail();
+
+        /**
+         * Seed manager role
+         */
+        $manager = User::create([
+          'name' => 'Manager',
+          'email' => 'super@manager.com',
+          'password' => Hash::make('12345')
         ]);
+        $manager->role()->associate($managerRole);
+        $manager->save();
+
+        /**
+         * Seed sale manager role
+         */
+        $saleManager = User::create([
+          'name' => 'Manager',
+          'email' => 'super@manager.com',
+          'password' => Hash::make('12345')
+        ]);
+        $saleManager->role()->associate($saleManagerRole);
+        $saleManager->save();
+
+        /**
+         * Seed sale role
+         */
+         $sale = User::create([
+           'name' => 'Sale 1',
+           'email' => 'sale@test.com',
+           'password' => Hash::make('12345'),
+         ]);
+         $sale->role()->associate($saleRole);
+         $sale->save();
     }
 }
