@@ -85,7 +85,7 @@ curl -X POST \
     -H "Authorization: Bearer {token}" \
     -H "Content-Type: application/json" \
     -H "Accept: application/json" \
-    -d '{"name":"nesciunt"}'
+    -d '{"name":"non"}'
 
 ```
 
@@ -101,7 +101,7 @@ let headers = {
 };
 
 let body = {
-    "name": "nesciunt"
+    "name": "non"
 }
 
 fetch(url, {
@@ -163,7 +163,7 @@ fetch(url, {
 
 ```bash
 curl -X GET \
-    -G "http://127.0.0.1:8000/api/industries/maiores" \
+    -G "http://127.0.0.1:8000/api/industries/illo" \
     -H "Authorization: Bearer {token}" \
     -H "Content-Type: application/json" \
     -H "Accept: application/json"
@@ -171,7 +171,7 @@ curl -X GET \
 
 ```javascript
 const url = new URL(
-    "http://127.0.0.1:8000/api/industries/maiores"
+    "http://127.0.0.1:8000/api/industries/illo"
 );
 
 let headers = {
@@ -238,17 +238,17 @@ fetch(url, {
 
 ```bash
 curl -X PUT \
-    "http://127.0.0.1:8000/api/industries/sit" \
+    "http://127.0.0.1:8000/api/industries/reprehenderit" \
     -H "Authorization: Bearer {token}" \
     -H "Content-Type: application/json" \
     -H "Accept: application/json" \
-    -d '{"name":"ea"}'
+    -d '{"name":"vel"}'
 
 ```
 
 ```javascript
 const url = new URL(
-    "http://127.0.0.1:8000/api/industries/sit"
+    "http://127.0.0.1:8000/api/industries/reprehenderit"
 );
 
 let headers = {
@@ -258,7 +258,7 @@ let headers = {
 };
 
 let body = {
-    "name": "ea"
+    "name": "vel"
 }
 
 fetch(url, {
@@ -328,7 +328,7 @@ true
 
 ```bash
 curl -X DELETE \
-    "http://127.0.0.1:8000/api/industries/sit" \
+    "http://127.0.0.1:8000/api/industries/error" \
     -H "Authorization: Bearer {token}" \
     -H "Content-Type: application/json" \
     -H "Accept: application/json"
@@ -336,7 +336,7 @@ curl -X DELETE \
 
 ```javascript
 const url = new URL(
-    "http://127.0.0.1:8000/api/industries/sit"
+    "http://127.0.0.1:8000/api/industries/error"
 );
 
 let headers = {

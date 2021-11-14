@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreatePipelinesTable extends Migration
+class AlterTableKpiActivitiesAddPipelineIdColumn extends Migration
 {
     /**
      * Run the migrations.
@@ -13,11 +13,8 @@ class CreatePipelinesTable extends Migration
      */
     public function up()
     {
-        Schema::create('pipelines', function (Blueprint $table) {
-          $table->uuid('id')->primary();
-          $table->string('name');
-          $table->timestamps();
-          $table->softDeletes();
+        Schema::table('kpi_activities', function (Blueprint $table) {
+            $table->uuid('pipeline_id');
         });
     }
 
@@ -28,6 +25,8 @@ class CreatePipelinesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('pipelines');
+        Schema::table('kpi_activities', function (Blueprint $table) {
+            $table->dropColumn('pipeline_id');
+        });
     }
 }

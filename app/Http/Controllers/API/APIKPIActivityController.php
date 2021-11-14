@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers\API;
 
-use App\Http\Controllers\Controller;
 use App\Http\Controllers\API\APIBaseController;
 use App\Models\KpiActivity;
+use App\Models\Pipeline;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 
@@ -27,19 +27,29 @@ class APIKpiActivityController extends APIBaseController
      * @header Authorization Bearer {token}
      * @authenticated
      * @bodyParam   name    string  required
+     * @bodyParam   score    number
+     * @bodyParam   pipelineId    string  required
      * @responseFile status=201 storage/responses/setting.get.json
      */
     public function store(Request $request)
     {
       $this->validate($request, [
           'name' => 'required|unique:kpi_activities,name,NULL,id,deleted_at,NULL',
+          'score' => 'numeric',
+          'pipelineId' => 'required'
       ]);
-      $kpi_activity = new KpiActivity([
-          'id' => Str::uuid(),
-          'name' => $request->get('name')
-      ]);
-      $kpi_activity->save();
-      return $this->sendResponse($kpi_activity);
+      $pipeline = Pipeline::find($request->get("pipelineId"));
+      if ($pipeline) {
+        $kpi_activity = new KpiActivity([
+            'id' => Str::uuid(),
+            'name' => $request->get('name'),
+            'score' => $request->get('score') ?? 0.0
+        ]);
+        $kpi_activity->pipeline()->associate($pipeline);
+        $kpi_activity->save();
+        return $this->sendResponse($kpi_activity);
+      }
+      return $this->sendError("Pipeline not found!");
     }
 
     /**
@@ -65,20 +75,30 @@ class APIKpiActivityController extends APIBaseController
      * @authenticated
      * @param  int  $id
      * @bodyParam   name    string  required
-     * @response 201 true
+     * @bodyParam   score    number
+     * @bodyParam   pipelineId    string  required
+     * @responseFile status=201 storage/responses/setting.get.json
      */
     public function update(Request $request, $id)
     {
       $this->validate($request, [
-          'name' => 'required|unique:kpi_activities,name',
+          'name' => 'required',
+          'score' => 'numeric',
+          'pipelineId' => 'required'
       ]);
+      $pipeline = Pipeline::find($request->get("pipelineId"));
       $kpi_activity = KpiActivity::find($id);
-      if ($kpi_activity) {
-        $kpi_activity->name = $request->get('name');
-        $kpi_activity->save();
-        return $this->sendResponse($kpi_activity);
+      if ($kpi_activity && $pipeline) {
+        if (!(KpiActivity::where("name", "=", $request->get("name"))->withTrashed()->count() > 1)) {
+            $kpi_activity->name = $request->get('name');
+            $kpi_activity->score = $request->get('score') ?? 0.0;
+            $kpi_activity->pipeline()->associate($pipeline);
+            $kpi_activity->save();
+            return $this->sendResponse($kpi_activity);
+        }
+        return $this->sendError("Kpi activity name already existed");
       } else {
-        return $this->sendError(["message" => "KpiActivity not found"], 404);
+        return $this->sendError("Kpi activity not found");
       }
     }
 

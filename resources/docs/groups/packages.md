@@ -85,7 +85,7 @@ curl -X POST \
     -H "Authorization: Bearer {token}" \
     -H "Content-Type: application/json" \
     -H "Accept: application/json" \
-    -d '{"name":"iste"}'
+    -d '{"name":"repellat"}'
 
 ```
 
@@ -101,7 +101,7 @@ let headers = {
 };
 
 let body = {
-    "name": "iste"
+    "name": "repellat"
 }
 
 fetch(url, {
@@ -163,7 +163,7 @@ fetch(url, {
 
 ```bash
 curl -X GET \
-    -G "http://127.0.0.1:8000/api/packages/vero" \
+    -G "http://127.0.0.1:8000/api/packages/odit" \
     -H "Authorization: Bearer {token}" \
     -H "Content-Type: application/json" \
     -H "Accept: application/json"
@@ -171,7 +171,7 @@ curl -X GET \
 
 ```javascript
 const url = new URL(
-    "http://127.0.0.1:8000/api/packages/vero"
+    "http://127.0.0.1:8000/api/packages/odit"
 );
 
 let headers = {
@@ -238,17 +238,17 @@ fetch(url, {
 
 ```bash
 curl -X PUT \
-    "http://127.0.0.1:8000/api/packages/impedit" \
+    "http://127.0.0.1:8000/api/packages/velit" \
     -H "Authorization: Bearer {token}" \
     -H "Content-Type: application/json" \
     -H "Accept: application/json" \
-    -d '{"name":"incidunt"}'
+    -d '{"name":"praesentium"}'
 
 ```
 
 ```javascript
 const url = new URL(
-    "http://127.0.0.1:8000/api/packages/impedit"
+    "http://127.0.0.1:8000/api/packages/velit"
 );
 
 let headers = {
@@ -258,7 +258,7 @@ let headers = {
 };
 
 let body = {
-    "name": "incidunt"
+    "name": "praesentium"
 }
 
 fetch(url, {
@@ -328,7 +328,7 @@ true
 
 ```bash
 curl -X DELETE \
-    "http://127.0.0.1:8000/api/packages/repellat" \
+    "http://127.0.0.1:8000/api/packages/magni" \
     -H "Authorization: Bearer {token}" \
     -H "Content-Type: application/json" \
     -H "Accept: application/json"
@@ -336,7 +336,7 @@ curl -X DELETE \
 
 ```javascript
 const url = new URL(
-    "http://127.0.0.1:8000/api/packages/repellat"
+    "http://127.0.0.1:8000/api/packages/magni"
 );
 
 let headers = {

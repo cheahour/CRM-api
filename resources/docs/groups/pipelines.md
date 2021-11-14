@@ -86,7 +86,7 @@ curl -X POST \
     -H "Authorization: Bearer {token}" \
     -H "Content-Type: application/json" \
     -H "Accept: application/json" \
-    -d '{"name":"est"}'
+    -d '{"name":"magni"}'
 
 ```
 
@@ -102,7 +102,7 @@ let headers = {
 };
 
 let body = {
-    "name": "est"
+    "name": "magni"
 }
 
 fetch(url, {
@@ -165,7 +165,7 @@ fetch(url, {
 
 ```bash
 curl -X GET \
-    -G "http://127.0.0.1:8000/api/pipelines/magnam" \
+    -G "http://127.0.0.1:8000/api/pipelines/ut" \
     -H "Authorization: Bearer {token}" \
     -H "Content-Type: application/json" \
     -H "Accept: application/json"
@@ -173,7 +173,7 @@ curl -X GET \
 
 ```javascript
 const url = new URL(
-    "http://127.0.0.1:8000/api/pipelines/magnam"
+    "http://127.0.0.1:8000/api/pipelines/ut"
 );
 
 let headers = {
@@ -241,17 +241,17 @@ fetch(url, {
 
 ```bash
 curl -X PUT \
-    "http://127.0.0.1:8000/api/pipelines/ea" \
+    "http://127.0.0.1:8000/api/pipelines/doloribus" \
     -H "Authorization: Bearer {token}" \
     -H "Content-Type: application/json" \
     -H "Accept: application/json" \
-    -d '{"name":"natus"}'
+    -d '{"name":"illum"}'
 
 ```
 
 ```javascript
 const url = new URL(
-    "http://127.0.0.1:8000/api/pipelines/ea"
+    "http://127.0.0.1:8000/api/pipelines/doloribus"
 );
 
 let headers = {
@@ -261,7 +261,7 @@ let headers = {
 };
 
 let body = {
-    "name": "natus"
+    "name": "illum"
 }
 
 fetch(url, {
@@ -331,7 +331,7 @@ true
 
 ```bash
 curl -X DELETE \
-    "http://127.0.0.1:8000/api/pipelines/reiciendis" \
+    "http://127.0.0.1:8000/api/pipelines/error" \
     -H "Authorization: Bearer {token}" \
     -H "Content-Type: application/json" \
     -H "Accept: application/json"
@@ -339,7 +339,7 @@ curl -X DELETE \
 
 ```javascript
 const url = new URL(
-    "http://127.0.0.1:8000/api/pipelines/reiciendis"
+    "http://127.0.0.1:8000/api/pipelines/error"
 );
 
 let headers = {

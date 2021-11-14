@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\API\AuthController;
 use App\Http\Controllers\API\APIRoleController;
+use App\Http\Controllers\API\APIUserController;
 use App\Http\Controllers\API\APIPackageController;
 use App\Http\Controllers\API\APIIndustryController;
 use App\Http\Controllers\API\APIPipelineController;
@@ -21,14 +22,15 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-// Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-//     return $request->user();
-// });
 Route::post("login",[AuthController::class,'login']);
 Route::middleware('auth:sanctum')->group(function () {
-    Route::post('users', [AuthController::class, 'create_user']);
-    Route::delete('users', [AuthController::class, 'logout']);
-    Route::get('roles', [APIRoleController::class, 'getRoles']);
+
+    Route::delete('logout', [AuthController::class, "logout"]);
+    Route::get('roles', [APIRoleController::class, "getRoles"]);
+    Route::post('sales', [APIUserController::class, "createSale"]);
+    Route::get("dsms", [APIUserController::class, "getDSMs"]);
+    Route::get("sale-executives", [APIUserController::class, "getSaleExecutives"]);
+
     Route::apiResource('packages', APIPackageController::class);
     Route::apiResource('industries', APIIndustryController::class);
     Route::apiResource('territories', APITerritoryController::class);

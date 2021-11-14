@@ -19,17 +19,14 @@ class PipelineSeeder extends Seeder
             [
                 'id' => Str::uuid(),
                 'name' => 'Hot prospect',
-                'score' => 10
             ],
             [
                 'id' => Str::uuid(),
                 'name' => 'New lead',
-                'score' => 5
             ],
             [
                 'id' => Str::uuid(),
-                'name' => 'Prospect',
-                'score' => 7
+                'name' => 'Prospect'
             ],
         ]);
     }

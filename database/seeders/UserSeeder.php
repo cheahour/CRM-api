@@ -18,41 +18,13 @@ class UserSeeder extends Seeder
      */
     public function run()
     {
-      $managerRole = Role::whereName("Manager")->firstOrFail();
-      $saleManagerRole = Role::whereName("Sale-manager")->firstOrFail();
-      $saleRole = Role::whereName("Sale")->firstOrFail();
-
-        /**
-         * Seed manager role
-         */
+        $role = Role::whereName("Head-sale")->firstOrFail();
         $manager = User::create([
           'name' => 'Manager',
           'email' => 'super@manager.com',
           'password' => Hash::make('12345')
         ]);
-        $manager->role()->associate($managerRole);
+        $manager->role()->associate($role);
         $manager->save();
-
-        /**
-         * Seed sale manager role
-         */
-        $saleManager = User::create([
-          'name' => 'Manager',
-          'email' => 'super@manager.com',
-          'password' => Hash::make('12345')
-        ]);
-        $saleManager->role()->associate($saleManagerRole);
-        $saleManager->save();
-
-        /**
-         * Seed sale role
-         */
-         $sale = User::create([
-           'name' => 'Sale 1',
-           'email' => 'sale@test.com',
-           'password' => Hash::make('12345'),
-         ]);
-         $sale->role()->associate($saleRole);
-         $sale->save();
     }
 }

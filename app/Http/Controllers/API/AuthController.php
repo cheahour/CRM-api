@@ -37,6 +37,7 @@ class AuthController extends APIBaseController
      */
     public function logout()
     {
+        /** @var \App\Models\User user() **/
         auth()->user()->tokens()->delete();
         return $this->sendResponse(true);
     }

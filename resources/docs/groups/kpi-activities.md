@@ -85,7 +85,7 @@ curl -X POST \
     -H "Authorization: Bearer {token}" \
     -H "Content-Type: application/json" \
     -H "Accept: application/json" \
-    -d '{"name":"quae"}'
+    -d '{"name":"sit","score":"doloremque","pipelineId":"aut"}'
 
 ```
 
@@ -101,7 +101,9 @@ let headers = {
 };
 
 let body = {
-    "name": "quae"
+    "name": "sit",
+    "score": "doloremque",
+    "pipelineId": "aut"
 }
 
 fetch(url, {
@@ -149,6 +151,18 @@ fetch(url, {
 <br>
 
 </p>
+<p>
+<b><code>score</code></b>&nbsp;&nbsp;<small> </small>     <i>optional</i> &nbsp;
+<input type="text" name="score" data-endpoint="POSTapi-kpi-activities" data-component="body"  hidden>
+<br>
+number
+</p>
+<p>
+<b><code>pipelineId</code></b>&nbsp;&nbsp;<small>string</small>  &nbsp;
+<input type="text" name="pipelineId" data-endpoint="POSTapi-kpi-activities" data-component="body" required  hidden>
+<br>
+
+</p>
 
 </form>
 
@@ -163,7 +177,7 @@ fetch(url, {
 
 ```bash
 curl -X GET \
-    -G "http://127.0.0.1:8000/api/kpi-activities/explicabo" \
+    -G "http://127.0.0.1:8000/api/kpi-activities/sit" \
     -H "Authorization: Bearer {token}" \
     -H "Content-Type: application/json" \
     -H "Accept: application/json"
@@ -171,7 +185,7 @@ curl -X GET \
 
 ```javascript
 const url = new URL(
-    "http://127.0.0.1:8000/api/kpi-activities/explicabo"
+    "http://127.0.0.1:8000/api/kpi-activities/sit"
 );
 
 let headers = {
@@ -238,17 +252,17 @@ fetch(url, {
 
 ```bash
 curl -X PUT \
-    "http://127.0.0.1:8000/api/kpi-activities/quod" \
+    "http://127.0.0.1:8000/api/kpi-activities/nisi" \
     -H "Authorization: Bearer {token}" \
     -H "Content-Type: application/json" \
     -H "Accept: application/json" \
-    -d '{"name":"voluptas"}'
+    -d '{"name":"praesentium","score":"vero","pipelineId":"et"}'
 
 ```
 
 ```javascript
 const url = new URL(
-    "http://127.0.0.1:8000/api/kpi-activities/quod"
+    "http://127.0.0.1:8000/api/kpi-activities/nisi"
 );
 
 let headers = {
@@ -258,7 +272,9 @@ let headers = {
 };
 
 let body = {
-    "name": "voluptas"
+    "name": "praesentium",
+    "score": "vero",
+    "pipelineId": "et"
 }
 
 fetch(url, {
@@ -272,7 +288,10 @@ fetch(url, {
 > Example response (201):
 
 ```json
-true
+{
+    "id": "ebb9453f-ccd3-429c-a7fd-c33e63f83b04",
+    "name": "Setting A"
+}
 ```
 <div id="execution-results-PUTapi-kpi-activities--kpi_activity-" hidden>
     <blockquote>Received response<span id="execution-response-status-PUTapi-kpi-activities--kpi_activity-"></span>:</blockquote>
@@ -314,6 +333,18 @@ true
 <br>
 
 </p>
+<p>
+<b><code>score</code></b>&nbsp;&nbsp;<small> </small>     <i>optional</i> &nbsp;
+<input type="text" name="score" data-endpoint="PUTapi-kpi-activities--kpi_activity-" data-component="body"  hidden>
+<br>
+number
+</p>
+<p>
+<b><code>pipelineId</code></b>&nbsp;&nbsp;<small>string</small>  &nbsp;
+<input type="text" name="pipelineId" data-endpoint="PUTapi-kpi-activities--kpi_activity-" data-component="body" required  hidden>
+<br>
+
+</p>
 
 </form>
 
@@ -328,7 +359,7 @@ true
 
 ```bash
 curl -X DELETE \
-    "http://127.0.0.1:8000/api/kpi-activities/unde" \
+    "http://127.0.0.1:8000/api/kpi-activities/repellat" \
     -H "Authorization: Bearer {token}" \
     -H "Content-Type: application/json" \
     -H "Accept: application/json"
@@ -336,7 +367,7 @@ curl -X DELETE \
 
 ```javascript
 const url = new URL(
-    "http://127.0.0.1:8000/api/kpi-activities/unde"
+    "http://127.0.0.1:8000/api/kpi-activities/repellat"
 );
 
 let headers = {

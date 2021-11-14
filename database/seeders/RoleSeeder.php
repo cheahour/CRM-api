@@ -18,11 +18,11 @@ class RoleSeeder extends Seeder
       DB::table('roles')->insert([
           [
               'id' => Str::uuid(),
-              'name' => 'Manager'
+              'name' => 'Head-sale'
           ],
           [
               'id' => Str::uuid(),
-              'name' => 'Sale-manager',
+              'name' => 'DSM',
           ],
           [
               'id' => Str::uuid(),

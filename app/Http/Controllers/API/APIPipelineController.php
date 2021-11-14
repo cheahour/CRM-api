@@ -33,12 +33,10 @@ class APIPipelineController extends APIBaseController
     {
       $this->validate($request, [
           'name' => 'required|unique:pipelines,name,NULL,id,deleted_at,NULL',
-          'score' => 'numeric'
       ]);
       $pipeline = new Pipeline([
           'id' => Str::uuid(),
           'name' => $request->get('name'),
-          'score' => $request->get('score') ?? 0.0,
       ]);
       $pipeline->save();
       return $this->sendResponse($pipeline);
@@ -73,12 +71,10 @@ class APIPipelineController extends APIBaseController
     {
       $this->validate($request, [
           'name' => 'required|unique:pipelines,name',
-          'score' => 'numeric'
       ]);
       $pipeline = Pipeline::find($id);
       if ($pipeline) {
         $pipeline->name = $request->get('name');
-        $pipeline->score = $request->get('score') ?? 0.0;
         $pipeline->save();
         return $this->sendResponse($pipeline);
       } else {
