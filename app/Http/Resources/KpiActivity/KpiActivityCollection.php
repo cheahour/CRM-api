@@ -1,11 +1,10 @@
 <?php
 
-namespace App\Http\Resources;
+namespace App\Http\Resources\KpiActivity;
 
 use Illuminate\Http\Resources\Json\ResourceCollection;
-use App\Http\Resources\AuthResource;
 
-class UsersCollection extends ResourceCollection
+class KpiActivityCollection extends ResourceCollection
 {
     /**
      * Transform the resource collection into an array.
@@ -15,7 +14,6 @@ class UsersCollection extends ResourceCollection
      */
     public function toArray($request)
     {
-        print($this->collection);
-        return new AuthResource($this->collection);
+        return $this->collection;
     }
 }

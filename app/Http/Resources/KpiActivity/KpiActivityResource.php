@@ -1,10 +1,11 @@
 <?php
 
-namespace App\Http\Resources;
+namespace App\Http\Resources\KpiActivity;
 
+use App\Http\Resources\Setting\SettingResource;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class RoleResource extends JsonResource
+class KpiActivityResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -15,8 +16,10 @@ class RoleResource extends JsonResource
     public function toArray($request)
     {
         return [
-          'id' => $this->id,
-          'name' => $this->name,
+            "id" => $this->id,
+            "name" => $this->name,
+            "score" => $this->score,
+            "pipeline" => new SettingResource($this->pipeline)
         ];
     }
 }

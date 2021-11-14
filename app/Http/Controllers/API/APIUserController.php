@@ -76,10 +76,7 @@ class APIUserController extends APIBaseController {
      */
     function getSaleExecutives(Request $request) {
       $sales = User::where("user_id", "=", $request->get('dsmId'))->with("role")->get();
-      if ($sales) {
-        return $this->sendResponse($sales);
-      }
-      return $this->sendError("Can not find any sales executives with this DSM");
+      return $this->sendResponse($sales);
     }
 
     /**
