@@ -55,7 +55,7 @@ class APITerritoryController extends APIBaseController
       if ($territory) {
         return $this->sendResponse($territory);
       } else {
-        return $this->sendError(["message" => "Territory not found"], 404);
+        return $this->sendError("Territory not found");
       }
     }
 
@@ -78,7 +78,7 @@ class APITerritoryController extends APIBaseController
         $territory->save();
         return $this->sendResponse($territory);
       } else {
-        return $this->sendError(["message" => "Territory not found"], 404);
+        return $this->sendError("Territory not found");
       }
     }
 
@@ -96,7 +96,7 @@ class APITerritoryController extends APIBaseController
         $territory = $territory->delete();
         return $this->sendResponse($territory);
       } else {
-        return $this->sendError(["message" => "Territory not found"], 404);
+        return $this->sendError("Territory not found");
       }
     }
 }

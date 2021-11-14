@@ -54,7 +54,7 @@ class APIIndustryController extends APIBaseController
       if ($industry) {
         return $this->sendResponse($industry);
       } else {
-        return $this->sendError(["message" => "Industry not found"], 404);
+        return $this->sendError("Industry not found");
       }
     }
 
@@ -77,7 +77,7 @@ class APIIndustryController extends APIBaseController
         $industry->save();
         return $this->sendResponse($industry);
       } else {
-        return $this->sendError(["message" => "Industry not found"], 404);
+        return $this->sendError("Industry not found");
       }
     }
 
@@ -95,7 +95,7 @@ class APIIndustryController extends APIBaseController
         $industry = $industry->delete();
         return $this->sendResponse($industry);
       } else {
-        return $this->sendError(["message" => "Industry not found"], 404);
+        return $this->sendError("Industry not found");
       }
     }
 }

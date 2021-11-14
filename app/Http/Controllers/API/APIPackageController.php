@@ -54,7 +54,7 @@ class APIPackageController extends APIBaseController
       if ($package) {
         return $this->sendResponse($package);
       } else {
-        return $this->sendError(["message" => "Package not found"], 404);
+        return $this->sendError("Package not found");
       }
     }
 
@@ -77,7 +77,7 @@ class APIPackageController extends APIBaseController
           $package->save();
           return $this->sendResponse($package);
         } else {
-          return $this->sendError(["message" => "Package not found"], 404);
+          return $this->sendError("Package not found");
         }
     }
 
@@ -95,7 +95,7 @@ class APIPackageController extends APIBaseController
           $package = $package->delete();
           return $this->sendResponse($package);
         } else {
-          return $this->sendError(["message" => "Package not found"], 404);
+          return $this->sendError("Package not found");
         }
     }
 }

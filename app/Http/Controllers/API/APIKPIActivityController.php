@@ -65,7 +65,7 @@ class APIKpiActivityController extends APIBaseController
       if ($kpi_activity) {
         return $this->sendResponse($kpi_activity);
       } else {
-        return $this->sendError(["message" => "KpiActivity not found"], 404);
+        return $this->sendError("KpiActivity not found");
       }
     }
 
@@ -116,7 +116,7 @@ class APIKpiActivityController extends APIBaseController
         $kpi_activity = $kpi_activity->delete();
         return $this->sendResponse($kpi_activity);
       } else {
-        return $this->sendError(["message" => "KpiActivity not found"], 404);
+        return $this->sendError("KpiActivity not found");
       }
     }
 }

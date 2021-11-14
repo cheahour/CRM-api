@@ -55,7 +55,7 @@ class APIPipelineController extends APIBaseController
       if ($pipeline) {
         return $this->sendResponse($pipeline);
       } else {
-        return $this->sendError(["message" => "Pipeline not found"], 404);
+        return $this->sendError("Pipeline not found");
       }
     }
 
@@ -78,7 +78,7 @@ class APIPipelineController extends APIBaseController
         $pipeline->save();
         return $this->sendResponse($pipeline);
       } else {
-        return $this->sendError(["message" => "Pipeline not found"], 404);
+        return $this->sendError("Pipeline not found");
       }
     }
 
@@ -96,7 +96,7 @@ class APIPipelineController extends APIBaseController
         $pipeline = $pipeline->delete();
         return $this->sendResponse($pipeline);
       } else {
-        return $this->sendError(["message" => "Pipeline not found"], 404);
+        return $this->sendError("Pipeline not found");
       }
     }
 }
