@@ -10,25 +10,12 @@ use Illuminate\Support\Str;
 
 class APIPipelineController extends APIBaseController
 {
-    /**
-     * @group Pipelines
-     * @header Authorization Bearer {token}
-     * @authenticated
-     * @responseFile status=201 storage/responses/pipelines.get.json
-     */
     public function index()
     {
       $pipelines = Pipeline::all();
       return $this->sendResponse($pipelines);
     }
 
-    /**
-     * @group Pipelines
-     * @header Authorization Bearer {token}
-     * @authenticated
-     * @bodyParam   name    string  required
-     * @responseFile status=201 storage/responses/pipeline.get.json
-     */
     public function store(Request $request)
     {
       $this->validate($request, [
@@ -42,13 +29,6 @@ class APIPipelineController extends APIBaseController
       return $this->sendResponse($pipeline);
     }
 
-    /**
-     * @group Pipelines
-     * @header Authorization Bearer {token}
-     * @authenticated
-     * @param  int  $id
-     * @responseFile status=201 storage/responses/pipeline.get.json
-     */
     public function show($id)
     {
       $pipeline = Pipeline::find($id);
@@ -59,14 +39,6 @@ class APIPipelineController extends APIBaseController
       }
     }
 
-    /**
-     * @group Pipelines
-     * @header Authorization Bearer {token}
-     * @authenticated
-     * @param  int  $id
-     * @bodyParam   name    string  required
-     * @response 201 true
-     */
     public function update(Request $request, $id)
     {
       $this->validate($request, [
@@ -82,13 +54,6 @@ class APIPipelineController extends APIBaseController
       }
     }
 
-    /**
-     * @group Pipelines
-     * @header Authorization Bearer {token}
-     * @authenticated
-     * @param  int  $id
-     * @response 201 true
-     */
     public function destroy($id)
     {
       $pipeline = Pipeline::find($id);

@@ -3,9 +3,8 @@
 namespace App\Http\Resources\User;
 
 use Illuminate\Http\Resources\Json\ResourceCollection;
-use App\Http\Resources\User\AuthResource;
 
-class UsersCollection extends ResourceCollection
+class UserCollection extends ResourceCollection
 {
     /**
      * Transform the resource collection into an array.
@@ -15,7 +14,6 @@ class UsersCollection extends ResourceCollection
      */
     public function toArray($request)
     {
-        print($this->collection);
-        return new AuthResource($this->collection);
+        return $this->collection;
     }
 }

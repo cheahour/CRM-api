@@ -12,27 +12,12 @@ use Illuminate\Support\Str;
 
 class APIKpiActivityController extends APIBaseController
 {
-    /**
-     * @group KPI Activities
-     * @header Authorization Bearer {token}
-     * @authenticated
-     * @responseFile status=201 storage/responses/settings.get.json
-     */
     public function index()
     {
       $kpi_activities = KpiActivity::with("pipeline")->get();
       return $this->sendResponse(new KpiActivityCollection($kpi_activities));
     }
 
-    /**
-     * @group KPI Activities
-     * @header Authorization Bearer {token}
-     * @authenticated
-     * @bodyParam   name    string  required
-     * @bodyParam   score    number
-     * @bodyParam   pipelineId    string  required
-     * @responseFile status=201 storage/responses/setting.get.json
-     */
     public function store(Request $request)
     {
       $this->validate($request, [
@@ -54,13 +39,6 @@ class APIKpiActivityController extends APIBaseController
       return $this->sendError("Pipeline not found!");
     }
 
-    /**
-     * @group KPI Activities
-     * @header Authorization Bearer {token}
-     * @authenticated
-     * @param  int  $id
-     * @responseFile status=201 storage/responses/setting.get.json
-     */
     public function show($id)
     {
       $kpi_activity = KpiActivity::find($id);
@@ -71,16 +49,6 @@ class APIKpiActivityController extends APIBaseController
       }
     }
 
-    /**
-     * @group KPI Activities
-     * @header Authorization Bearer {token}
-     * @authenticated
-     * @param  int  $id
-     * @bodyParam   name    string  required
-     * @bodyParam   score    number
-     * @bodyParam   pipelineId    string  required
-     * @responseFile status=201 storage/responses/setting.get.json
-     */
     public function update(Request $request, $id)
     {
       $this->validate($request, [
@@ -104,13 +72,6 @@ class APIKpiActivityController extends APIBaseController
       }
     }
 
-    /**
-     * @group KPI Activities
-     * @header Authorization Bearer {token}
-     * @authenticated
-     * @param  int  $id
-     * @response 201 true
-     */
     public function destroy($id)
     {
       $kpi_activity = KpiActivity::find($id);

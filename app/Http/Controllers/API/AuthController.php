@@ -2,22 +2,15 @@
 
 namespace App\Http\Controllers\API;
 
-use App\Http\Resources\AuthResource;
+use App\Http\Resources\User\UserResource;
 use App\Models\User;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 
 class AuthController extends APIBaseController
 {
-    /**
-     * @group Authentication
-     * @bodyParam   email    string  required
-     * @bodyParam   password    string  required
-     */
-    function login(Request $request)
-    {
+    function login(Request $request) {
         $user= User::where('email', $request->email)->first();
         if (!$user || !Hash::check($request->password, $user->password)) {
             return $this->sendError('These credentials do not match our records.');
@@ -25,19 +18,14 @@ class AuthController extends APIBaseController
 
         $token = $user->createToken(Str::uuid())->plainTextToken;
         $response = [
-            'user' => new AuthResource($user),
+            'user' => new UserResource($user),
             'token' => $token
         ];
-
         return $this->sendResponse($response);
     }
 
-    /**
-     * @group Authentication
-     */
     public function logout()
     {
-        /** @var \App\Models\User user() **/
         auth()->user()->tokens()->delete();
         return $this->sendResponse(true);
     }

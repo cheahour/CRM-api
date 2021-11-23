@@ -8,12 +8,6 @@ use App\Models\Role;
 
 class APIRoleController extends APIBaseController
 {
-    /**
-     * @group Roles
-     * @header Authorization Bearer {token}
-     * @authenticated
-     * @responseFile status=201 storage/responses/roles.get.json
-     */
     public function getRoles() {
       $roles = Role::all();
       return $this->sendResponse($roles);
