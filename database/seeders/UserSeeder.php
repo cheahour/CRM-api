@@ -18,13 +18,23 @@ class UserSeeder extends Seeder
      */
     public function run()
     {
-        $role = Role::whereName("Head-sale")->firstOrFail();
+        $head_sale = Role::whereName("Head-sale")->firstOrFail();
+        $dsm = Role::whereName("DSM")->firstOrFail();
         $manager = User::create([
           'name' => 'Manager',
           'email' => 'super@manager.com',
           'password' => Hash::make('12345')
         ]);
-        $manager->role()->associate($role);
+        $anonymous_dsm = User::create([
+            "name" => "Anonymous",
+            "email" => "anonymous@dsm.com",
+            "password" => Hash::make("12345")
+        ]);
+
+        $manager->role()->associate($head_sale);
+        $anonymous_dsm->role()->associate($dsm);
+
         $manager->save();
+        $anonymous_dsm->save();
     }
 }

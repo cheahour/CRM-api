@@ -4,7 +4,6 @@ namespace App\Http\Controllers\API;
 
 use App\Models\Package;
 use App\Http\Controllers\API\APIBaseController;
-use Facade\FlareClient\Http\Response;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 
@@ -12,7 +11,7 @@ class APIPackageController extends APIBaseController
 {
     public function index() {
         $packages = Package::all();
-        return $this->sendResponse($packages);
+        return $this->send_response($packages);
     }
 
     public function store(Request $request)
@@ -25,16 +24,16 @@ class APIPackageController extends APIBaseController
             'name' => $request->get('name')
         ]);
         $package->save();
-        return $this->sendResponse($package);
+        return $this->send_response($package);
     }
 
     public function show($id)
     {
       $package = Package::find($id);
       if ($package) {
-        return $this->sendResponse($package);
+        return $this->send_response($package);
       } else {
-        return $this->sendError("Package not found");
+        return $this->send_error(__("custom_error.data_not_found", ["object" => "Package"]));
       }
     }
 
@@ -45,11 +44,12 @@ class APIPackageController extends APIBaseController
         ]);
         $package = Package::find($id);
         if ($package) {
-          $package->name = $request->get('name');
-          $package->save();
-          return $this->sendResponse($package);
-        } else {
-          return $this->sendError("Package not found");
+            $package->name = $request->get('name');
+            $package->save();
+            return $this->send_response($package);
+        }
+        else {
+            return $this->send_error(__("custom_error.data_not_found", ["object" => "Package"]));
         }
     }
 
@@ -57,10 +57,10 @@ class APIPackageController extends APIBaseController
     {
         $package = Package::find($id);
         if ($package) {
-          $package = $package->delete();
-          return $this->sendResponse($package);
+            $package = $package->delete();
+            return $this->send_response($package);
         } else {
-          return $this->sendError("Package not found");
+            return $this->send_error(__("custom_error.data_not_found", ["object" => "Package"]));
         }
     }
 }

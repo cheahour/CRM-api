@@ -12,31 +12,43 @@ class APIUserController extends APIBaseController {
     function createSale(Request $request) {
         $request->validate([
             'name' => 'required|string',
-            'email' => 'required|string|email|unique:users,email',
+            'email' => 'required|string',
+            // 'email' => 'required|string|email|unique:users,email',
             'password' => 'required|min:5',
-            'repeatPassword' => 'required|min:5',
-            'roleId' => 'required'
+            'repeat_password' => 'required|min:5',
+            'role_id' => 'required',
         ]);
-        $user = auth()->user();
-        $role = Role::find($request->get('roleId'));
+        $current_user = auth()->user();
+        $role = Role::find($request->get('role_id'));
+
         if ($role) {
-            if ($role->id != $user->role->id) {
-                if ($request->get("password") == $request->get("repeatPassword")) {
+            if ($role->id != $current_user->role->id) {
+                if ($request->get("password") == $request->get("repeat_password")) {
+                    $user_id = $request->get("user_id") != null ? $request->get("user_id") : $current_user->id;
                     $user = new User([
                         'name' => $request->get('name'),
                         'email' => $request->get('email'),
                         'password' => bcrypt($request->get('password')),
-                        'user_id' => $user->id
+                        'user_id' => $user_id
                     ]);
                     $user->role()->associate($role);
                     $user->save();
-                    return $this->sendResponse(new UserResource($user));
+                    return $this->send_response(new UserResource($user));
                 }
-                return $this->sendError("Password and repeat didn't match!", [], 500);
+                return $this->send_error(__("custom_error.password_not_match"), [], 500);
             }
-            return $this->sendError("You don't have permission to create this user");
+            return $this->send_error(__("custom_error.no_permission_to_make_change"), [], 500);
         }
-        return $this->sendError("Role not found!");
+        return $this->send_error(__("custom_error.data_not_found", ["object" => "Role"]));
+    }
+
+    function getProfile() {
+        $user = auth()->user();
+        if ($user) {
+            $response = new UserResource($user);
+            return $this->send_response($response);
+        }
+        return $this->send_error(__("custom_error.something_went_wrong"), [], 500);
     }
 
     function getDSMs(Request $request) {
@@ -46,24 +58,27 @@ class APIUserController extends APIBaseController {
             $limit = $request->get("limit") ?? 20;
             $dsms = User::with("role")->where("role_id", "=", $role->id)->skip($offset)->take($limit)->get();
             if ($dsms) {
-                return $this->sendResponse(new UserCollection($dsms));
+                return $this->send_response(new UserCollection($dsms));
             }
-            return $this->sendError("DSM not found!");
+            return $this->send_error(__("custom_error.data_not_found", ["object" => "User"]));
         }
-        return $this->sendError("Something went wrong!");
+        return $this->send_error(__("custom_error.data_not_found", ["object" => "Role"]));
     }
 
     function getSaleExecutives(Request $request) {
-        $dsmId = $request->get("dsmId") == null ? auth()->user()->id : $request->get("dsmId");
+        $dsm_id = $request->get("dsm_id") != null ? $request->get("dsm_id") : auth()->user()->id;
         $offset = $request->get("offset") ?? 0;
         $limit = $request->get("limit") ?? 20;
         $role = Role::whereName("Sale")->first();
         if ($role) {
-            $sales = User::where("user_id", "=", $dsmId)
+            $sales = User::where("user_id", "=", $dsm_id)
             ->where("role_id", "=", $role->id)
-            ->with("role")->skip($offset)->take($limit)->get();
-            return $this->sendResponse(new UserCollection($sales));
+            ->with("role")
+            ->skip($offset)
+            ->take($limit)
+            ->get();
+            return $this->send_response(new UserCollection($sales));
         }
-        return $this->sendError("Role not found!");
+        return $this->send_error(__("custom_error.data_not_found", ["object" => "Role"]));
     }
 }

@@ -24,7 +24,7 @@ use Illuminate\Support\Facades\Route;
 
 Route::post("login",[AuthController::class,'login']);
 Route::middleware('auth:sanctum')->group(function () {
-
+    Route::get("profile", [APIUserController::class, "getProfile"]);
     Route::delete('logout', [AuthController::class, "logout"]);
     Route::get('roles', [APIRoleController::class, "getRoles"]);
     Route::post('sales', [APIUserController::class, "createSale"]);

@@ -2,7 +2,6 @@
 
 namespace App\Models;
 
-use App\Http\Middleware\Authenticate;
 use App\Traits\Uuids;
 use Illuminate\Auth\Authenticatable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -27,8 +26,8 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
         'name',
         'email',
         'password',
-        'role',
-        'user_id'
+        'user_id',
+        'role'
     ];
 
     /**
@@ -53,5 +52,58 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
     public function role()
     {
         return $this->belongsTo(Role::class);
+    }
+
+    /**
+     * Write code on Method
+     *
+     * @return response()
+     */
+    public static function boot() {
+        parent::boot();
+        /**
+         * Write code on Method
+         *
+         * @return response()
+         */
+        static::creating(function($item) {
+
+        });
+
+        /**
+         * Write code on Method
+         *
+         * @return response()
+         */
+        static::created(function($item) {
+
+        });
+
+        /**
+         * Write code on Method
+         *
+         * @return response()
+         */
+        static::updating(function($item) {
+
+        });
+
+        /**
+         * Write code on Method
+         *
+         * @return response()
+         */
+        static::updated(function($item) {
+
+        });
+
+        /**
+         * Write code on Method
+         *
+         * @return response()
+         */
+        static::deleted(function($item) {
+
+        });
     }
 }

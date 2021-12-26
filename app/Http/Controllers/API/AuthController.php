@@ -13,7 +13,7 @@ class AuthController extends APIBaseController
     function login(Request $request) {
         $user= User::where('email', $request->email)->first();
         if (!$user || !Hash::check($request->password, $user->password)) {
-            return $this->sendError('These credentials do not match our records.');
+            return $this->send_error(__("custom_error.login_failed"));
         }
 
         $token = $user->createToken(Str::uuid())->plainTextToken;
@@ -21,12 +21,12 @@ class AuthController extends APIBaseController
             'user' => new UserResource($user),
             'token' => $token
         ];
-        return $this->sendResponse($response);
+        return $this->send_response($response);
     }
 
     public function logout()
     {
         auth()->user()->tokens()->delete();
-        return $this->sendResponse(true);
+        return $this->send_response(true);
     }
 }

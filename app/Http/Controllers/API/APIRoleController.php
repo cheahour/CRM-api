@@ -10,6 +10,6 @@ class APIRoleController extends APIBaseController
 {
     public function getRoles() {
       $roles = Role::all();
-      return $this->sendResponse($roles);
+      return $this->send_response($roles);
     }
 }

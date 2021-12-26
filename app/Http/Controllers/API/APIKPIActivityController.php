@@ -15,7 +15,7 @@ class APIKpiActivityController extends APIBaseController
     public function index()
     {
       $kpi_activities = KpiActivity::with("pipeline")->get();
-      return $this->sendResponse(new KpiActivityCollection($kpi_activities));
+      return $this->send_response(new KpiActivityCollection($kpi_activities));
     }
 
     public function store(Request $request)
@@ -23,9 +23,9 @@ class APIKpiActivityController extends APIBaseController
       $this->validate($request, [
           'name' => 'required|unique:kpi_activities,name,NULL,id,deleted_at,NULL',
           'score' => 'numeric',
-          'pipelineId' => 'required'
+          'pipeline_id' => 'required'
       ]);
-      $pipeline = Pipeline::find($request->get("pipelineId"));
+      $pipeline = Pipeline::find($request->get("pipeline_id"));
       if ($pipeline) {
         $kpi_activity = new KpiActivity([
             'id' => Str::uuid(),
@@ -34,18 +34,18 @@ class APIKpiActivityController extends APIBaseController
         ]);
         $kpi_activity->pipeline()->associate($pipeline);
         $kpi_activity->save();
-        return $this->sendResponse(new KpiActivityResource($kpi_activity));
+        return $this->send_response(new KpiActivityResource($kpi_activity));
       }
-      return $this->sendError("Pipeline not found!");
+      return $this->send_error(__("custom_error.data_not_found", ["object" => "Pipeline"]));
     }
 
     public function show($id)
     {
       $kpi_activity = KpiActivity::find($id);
       if ($kpi_activity) {
-        return $this->sendResponse($kpi_activity);
+        return $this->send_response($kpi_activity);
       } else {
-        return $this->sendError("KpiActivity not found");
+        return $this->send_error(__("custom_error.data_not_found", ["object" => "Kpi activity"]));
       }
     }
 
@@ -54,9 +54,9 @@ class APIKpiActivityController extends APIBaseController
       $this->validate($request, [
           'name' => 'required',
           'score' => 'numeric',
-          'pipelineId' => 'required'
+          'pipeline_id' => 'required'
       ]);
-      $pipeline = Pipeline::find($request->get("pipelineId"));
+      $pipeline = Pipeline::find($request->get("pipeline_id"));
       $kpi_activity = KpiActivity::find($id);
       if ($kpi_activity && $pipeline) {
         if (!(KpiActivity::where("name", "=", $request->get("name"))->withTrashed()->count() > 1)) {
@@ -64,12 +64,11 @@ class APIKpiActivityController extends APIBaseController
             $kpi_activity->score = $request->get('score') ?? 0.0;
             $kpi_activity->pipeline()->associate($pipeline);
             $kpi_activity->save();
-            return $this->sendResponse(new KpiActivityResource($kpi_activity));
+            return $this->send_response(new KpiActivityResource($kpi_activity));
         }
-        return $this->sendError("Kpi activity name already existed");
-      } else {
-        return $this->sendError("Kpi activity not found");
+        return $this->send_error(__("custom_error.data_already_existed", ["object" => "Kpi activity"]), [], 500);
       }
+      return $this->send_error(__("custom_error.data_not_found", ["object" => "Either kpi activity or pipeline"]));
     }
 
     public function destroy($id)
@@ -77,9 +76,8 @@ class APIKpiActivityController extends APIBaseController
       $kpi_activity = KpiActivity::find($id);
       if ($kpi_activity) {
         $kpi_activity = $kpi_activity->delete();
-        return $this->sendResponse($kpi_activity);
-      } else {
-        return $this->sendError("Kpi activity not found");
+        return $this->send_response($kpi_activity);
       }
+      return $this->send_error(__("custom_error.data_not_found", ["object" => "Kpi activity"]));
     }
 }

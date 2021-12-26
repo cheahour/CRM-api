@@ -13,7 +13,7 @@ class APIPipelineController extends APIBaseController
     public function index()
     {
       $pipelines = Pipeline::all();
-      return $this->sendResponse($pipelines);
+      return $this->send_response($pipelines);
     }
 
     public function store(Request $request)
@@ -26,16 +26,16 @@ class APIPipelineController extends APIBaseController
           'name' => $request->get('name'),
       ]);
       $pipeline->save();
-      return $this->sendResponse($pipeline);
+      return $this->send_response($pipeline);
     }
 
     public function show($id)
     {
       $pipeline = Pipeline::find($id);
       if ($pipeline) {
-        return $this->sendResponse($pipeline);
+        return $this->send_response($pipeline);
       } else {
-        return $this->sendError("Pipeline not found");
+        return $this->send_error(__("custom_error.data_not_found", ["object" => "Pipeline"]));
       }
     }
 
@@ -48,9 +48,9 @@ class APIPipelineController extends APIBaseController
       if ($pipeline) {
         $pipeline->name = $request->get('name');
         $pipeline->save();
-        return $this->sendResponse($pipeline);
+        return $this->send_response($pipeline);
       } else {
-        return $this->sendError("Pipeline not found");
+        return $this->send_error(__("custom_error.data_not_found", ["object" => "Pipeline"]));
       }
     }
 
@@ -59,9 +59,9 @@ class APIPipelineController extends APIBaseController
       $pipeline = Pipeline::find($id);
       if ($pipeline) {
         $pipeline = $pipeline->delete();
-        return $this->sendResponse($pipeline);
+        return $this->send_response($pipeline);
       } else {
-        return $this->sendError("Pipeline not found");
+        return $this->send_error(__("custom_error.data_not_found", ["object" => "Pipeline"]));
       }
     }
 }

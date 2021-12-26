@@ -12,7 +12,7 @@ class APIIndustryController extends APIBaseController
     public function index()
     {
         $industries = Industry::all();
-        return $this->sendResponse($industries);
+        return $this->send_response($industries);
     }
 
     public function store(Request $request)
@@ -25,17 +25,16 @@ class APIIndustryController extends APIBaseController
           'name' => $request->get('name')
       ]);
       $industry->save();
-      return $this->sendResponse($industry);
+      return $this->send_response($industry);
     }
 
     public function show($id)
     {
       $industry = Industry::find($id);
       if ($industry) {
-        return $this->sendResponse($industry);
-      } else {
-        return $this->sendError("Industry not found");
+        return $this->send_response($industry);
       }
+      return $this->send_error(__("custom_error.data_not_found", ["object" => "Industry"]));
     }
 
     public function update(Request $request, $id)
@@ -47,10 +46,9 @@ class APIIndustryController extends APIBaseController
       if ($industry) {
         $industry->name = $request->get('name');
         $industry->save();
-        return $this->sendResponse($industry);
-      } else {
-        return $this->sendError("Industry not found");
+        return $this->send_response($industry);
       }
+      return $this->send_error(__("custom_error.data_not_found", ["object" => "Industry"]));
     }
 
     public function destroy($id)
@@ -58,9 +56,8 @@ class APIIndustryController extends APIBaseController
       $industry = Industry::find($id);
       if ($industry) {
         $industry = $industry->delete();
-        return $this->sendResponse($industry);
-      } else {
-        return $this->sendError("Industry not found");
+        return $this->send_response($industry);
       }
+      return $this->send_error(__("custom_error.data_not_found", ["object" => "Industry"]));
     }
 }

@@ -13,7 +13,7 @@ class APITerritoryController extends APIBaseController
     public function index()
     {
         $territories = Territory::all();
-        return $this->sendResponse($territories);
+        return $this->send_response($territories);
     }
 
     public function store(Request $request)
@@ -26,16 +26,16 @@ class APITerritoryController extends APIBaseController
           'name' => $request->get('name')
       ]);
       $territory->save();
-      return $this->sendResponse($territory);
+      return $this->send_response($territory);
     }
 
     public function show($id)
     {
       $territory = Territory::find($id);
       if ($territory) {
-        return $this->sendResponse($territory);
+        return $this->send_response($territory);
       } else {
-        return $this->sendError("Territory not found");
+        return $this->send_error(__("custom_error.data_not_found", ["object" => "Territory"]));
       }
     }
 
@@ -48,9 +48,9 @@ class APITerritoryController extends APIBaseController
       if ($territory) {
         $territory->name = $request->get('name');
         $territory->save();
-        return $this->sendResponse($territory);
+        return $this->send_response($territory);
       } else {
-        return $this->sendError("Territory not found");
+        return $this->send_error(__("custom_error.data_not_found", ["object" => "Territory"]));
       }
     }
 
@@ -59,9 +59,9 @@ class APITerritoryController extends APIBaseController
       $territory = Territory::find($id);
       if ($territory) {
         $territory = $territory->delete();
-        return $this->sendResponse($territory);
+        return $this->send_response($territory);
       } else {
-        return $this->sendError("Territory not found");
+        return $this->send_error(__("custom_error.data_not_found", ["object" => "Territory"]));
       }
     }
 }
