@@ -3,11 +3,10 @@
 namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Str;
 use App\Models\Role;
 use App\Models\User;
+use Illuminate\Support\Str;
 
 class UserSeeder extends Seeder
 {
@@ -18,23 +17,35 @@ class UserSeeder extends Seeder
      */
     public function run()
     {
-        $head_sale = Role::whereName("Head-sale")->firstOrFail();
-        $dsm = Role::whereName("DSM")->firstOrFail();
+        $head_sale = Role::whereName(__("user_role.head_sale"))->firstOrFail();
+        $dsm = Role::whereName(__("user_role.dsm"))->firstOrFail();
+        $sale = Role::whereName(__("user_role.sale"))->firstOrFail();
         $manager = User::create([
-          'name' => 'Manager',
-          'email' => 'super@manager.com',
-          'password' => Hash::make('12345')
+            "id" => Str::uuid(),
+            'name' => __("user_account.default_head_sale_name"),
+            'email' => __("user_account.default_head_sale_email"),
+            'password' => Hash::make(__("user_account.default_password"))
         ]);
         $anonymous_dsm = User::create([
-            "name" => "Anonymous",
-            "email" => "anonymous@dsm.com",
-            "password" => Hash::make("12345")
+            "id" => Str::uuid(),
+            "name" => __("user_account.anonymous_name"),
+            "email" => __("user_account.anonymous_email"),
+            "password" => Hash::make(__("user_account.default_password"))
+        ]);
+        $default_sale = User::create([
+            "id" => Str::uuid(),
+            "name" => __("user_account.mock_sale_name"),
+            "email" => __("user_account.mock_sale_email"),
+            "password" => Hash::make(__("user_account.default_password")),
+            "user_id" => $anonymous_dsm->id,
         ]);
 
         $manager->role()->associate($head_sale);
         $anonymous_dsm->role()->associate($dsm);
+        $default_sale->role()->associate($sale);
 
         $manager->save();
         $anonymous_dsm->save();
+        $default_sale->save();
     }
 }

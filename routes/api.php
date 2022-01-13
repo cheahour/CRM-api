@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\API\APICustomerController;
 use App\Http\Controllers\API\AuthController;
 use App\Http\Controllers\API\APIRoleController;
 use App\Http\Controllers\API\APIUserController;
@@ -8,7 +9,6 @@ use App\Http\Controllers\API\APIIndustryController;
 use App\Http\Controllers\API\APIPipelineController;
 use App\Http\Controllers\API\APITerritoryController;
 use App\Http\Controllers\API\APIKpiActivityController;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -23,6 +23,7 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::post("login",[AuthController::class,'login']);
+Route::post("sales/login", [AuthController::class, "login_as_sale"]);
 Route::middleware('auth:sanctum')->group(function () {
     Route::get("profile", [APIUserController::class, "getProfile"]);
     Route::delete('logout', [AuthController::class, "logout"]);
@@ -36,4 +37,8 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::apiResource('territories', APITerritoryController::class);
     Route::apiResource('kpi-activities', APIKpiActivityController::class);
     Route::apiResource('pipelines', APIPipelineController::class);
+});
+
+Route::middleware('auth:sanctum')->group(function () {
+    Route::apiResource('sales/customers', APICustomerController::class);
 });

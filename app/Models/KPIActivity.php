@@ -17,6 +17,10 @@ class KpiActivity extends Model
         'score',
     ];
 
+    public function customer() {
+        return $this->hasMany(Customer::class);
+    }
+
     public function pipeline()
     {
         return $this->belongsTo(Pipeline::class);

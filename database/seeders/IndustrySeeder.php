@@ -18,19 +18,19 @@ class IndustrySeeder extends Seeder
         DB::table('industries')->insert([
             [
                 'id' => Str::uuid(),
-                'name' => 'School',
-            ],
-            [
-                'id' => Str::uuid(),
-                'name' => 'Hospital',
-            ],
-            [
-                'id' => Str::uuid(),
-                'name' => 'Restaurant',
+                'name' => 'Company',
             ],
             [
                 'id' => Str::uuid(),
                 'name' => 'Residential',
+            ],
+            [
+                'id' => Str::uuid(),
+                'name' => 'Mart',
+            ],
+            [
+                'id' => Str::uuid(),
+                'name' => 'Factory',
             ],
         ]);
     }

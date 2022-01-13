@@ -18,19 +18,15 @@ class PackageSeeder extends Seeder
         DB::table('packages')->insert([
             [
                 'id' => Str::uuid(),
-                'name' => 'Fiber',
+                'name' => 'Today Fiber',
             ],
             [
                 'id' => Str::uuid(),
-                'name' => 'BBI',
+                'name' => 'Today Fiber plus',
             ],
             [
                 'id' => Str::uuid(),
-                'name' => 'DBI',
-            ],
-            [
-                'id' => Str::uuid(),
-                'name' => 'xFast',
+                'name' => 'Today Simply fast',
             ],
         ]);
     }

@@ -18,19 +18,15 @@ class TerritorySeeder extends Seeder
         DB::table('territories')->insert([
             [
                 'id' => Str::uuid(),
-                'name' => 'PP-CM',
+                'name' => 'PP-Chrouy Changvar',
             ],
             [
                 'id' => Str::uuid(),
-                'name' => 'PP-PM',
+                'name' => 'PP-Toul Kok',
             ],
             [
                 'id' => Str::uuid(),
-                'name' => 'PP-TT',
-            ],
-            [
-                'id' => Str::uuid(),
-                'name' => 'PP-PT',
+                'name' => 'PP-Meanchey',
             ],
         ]);
     }

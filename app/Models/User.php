@@ -54,6 +54,10 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
         return $this->belongsTo(Role::class);
     }
 
+    public function customer() {
+        return $this->hasMany(Customer::class);
+    }
+
     /**
      * Write code on Method
      *
