@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers\API;
 
-use App\Http\Resources\CustomerResource;
+use App\Http\Resources\Customer\CustomerCollection;
+use App\Http\Resources\Customer\CustomerDetailResource;
+use App\Http\Resources\Customer\CustomerResource;
 use App\Rules\PhoneNumber;
 use Illuminate\Http\Request;
 use App\Repositories\Customer\CustomerRepositoryInterface;
@@ -22,9 +24,11 @@ class APICustomerController extends APIBaseController
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-
+        $customers = $this->repository->get_customers($request);
+        $format = new CustomerCollection($customers);
+        return $this->send_response($format->response()->getData(true));
     }
 
     /**
@@ -49,7 +53,7 @@ class APICustomerController extends APIBaseController
         }
         $customer = $this->repository->create_customer($request);
         if ($customer) {
-            return $this->send_response($customer);
+            return $this->send_response(new CustomerDetailResource($customer));
         }
         return $this->send_error(__("custom_error.something_went_wrong"), 500);
     }
@@ -64,7 +68,7 @@ class APICustomerController extends APIBaseController
     {
         $customer = $this->repository->get_customer($id);
         if ($customer) {
-            return $this->send_response(new CustomerResource($customer));
+            return $this->send_response(new CustomerDetailResource($customer));
         }
         return $this->send_error(__("custom_error.data_not_found", ["object" => "Customer"]), 404);
     }
@@ -92,7 +96,7 @@ class APICustomerController extends APIBaseController
         }
         $customer = $this->repository->update_customer($id, $request);
         if ($customer) {
-            return $this->send_response(new CustomerResource($customer));
+            return $this->send_response(new CustomerDetailResource($customer));
         }
         return $this->send_error(__("custom_error.something_went_wrong"), 500);
     }

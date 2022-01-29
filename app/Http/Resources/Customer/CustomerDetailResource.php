@@ -1,10 +1,12 @@
 <?php
 
-namespace App\Http\Resources;
+namespace App\Http\Resources\Customer;
 
+use App\Http\Resources\KpiActivity\KpiActivityResource;
+use App\Http\Resources\Setting\SettingResource;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class CustomerResource extends JsonResource
+class CustomerDetailResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -30,7 +32,11 @@ class CustomerResource extends JsonResource
             "expected_closed_date" => $this->expected_closed_date,
             "billing_date" => $this->billing_date,
             "next_follow_up_date" => $this->next_follow_up_date,
-            "remark" => $this->remark
+            "remark" => $this->remark,
+            "industry" => new SettingResource($this->industry),
+            "territory" => new SettingResource($this->territory),
+            "kpi_activity" => new KpiActivityResource($this->kpi_activity),
+            "package" => new SettingResource($this->package),
         ];
     }
 }

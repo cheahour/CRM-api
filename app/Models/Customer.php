@@ -2,13 +2,14 @@
 
 namespace App\Models;
 
+use App\Traits\Uuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Str;
 
 class Customer extends Model
 {
-    use HasFactory;
+    use HasFactory, Uuids;
 
     /**
      * The attributes that are mass assignable.
@@ -16,6 +17,7 @@ class Customer extends Model
      * @var array
      */
     protected $fillable = [
+        // "id",
         "name",
         "email",
         "phone_number",
@@ -38,7 +40,13 @@ class Customer extends Model
         parent::boot();
         static::creating(function ($model) {
             $model->id = Str::uuid();
+            $model->user_id = auth()->user()->id;
         });
+    }
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
     }
 
     public function territory()

@@ -9,11 +9,22 @@ use App\Models\Package;
 use App\Models\Territory;
 use App\Repositories\Customer\CustomerRepositoryInterface;
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 
 class CustomerRepository implements CustomerRepositoryInterface {
-    public function get_customers()
+    public function get_customers(Request $request)
     {
-
+        $limit = $request->query("limit");
+        $show_all_customers = $request->query("show_all_customers");
+        if ($show_all_customers == "true") {
+            return Customer::orderBy("name")
+                ->paginate($limit);
+        }
+        else if ($show_all_customers) {
+            return Customer::orderBy("name")
+            ->where("user_id", auth()->user()->id)
+            ->paginate($limit);
+        }
     }
 
     public function create_customer(Request $request)
@@ -24,6 +35,7 @@ class CustomerRepository implements CustomerRepositoryInterface {
         $package = Package::find($request->get("package_id"));
         if ($territory && $industry && $kpi_activity && $package) {
             $customer = new Customer([
+                "id" => Str::uuid(),
                 "name" => $request->get("name"),
                 'email' => $request->get('email'),
                 "phone_number" => $request->get("phone_number"),

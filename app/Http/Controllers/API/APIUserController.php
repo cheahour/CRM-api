@@ -24,7 +24,6 @@ class APIUserController extends APIBaseController {
         if ($role) {
             if ($role->id != $current_user->role->id) {
                 if ($request->get("password") == $request->get("repeat_password")) {
-                    $is_head_sale = $current_user->role->name == __("user_role.head_sale");
                     $user_id = $request->get("user_id") != null ? $request->get("user_id") : $current_user->id;
                     $user = new User([
                         'name' => $request->get('name'),

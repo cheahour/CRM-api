@@ -19,7 +19,9 @@ class AuthController extends APIBaseController
         if (!$user || !Hash::check($request->password, $user->password)) {
             return $this->send_error(__("custom_error.login_failed"));
         }
-
+        if ($user->role->name == __("user_role.sale")) {
+            return $this->send_error(__("custom_error.no_permission_to_sign_in"));
+        }
         $token = $user->createToken(Str::uuid())->plainTextToken;
         $response = [
             'user' => new UserResource($user),
@@ -37,7 +39,7 @@ class AuthController extends APIBaseController
         $password = $request->get("password");
         if ($email != null && $password != null) {
             $user= User::where('email', $request->email)->first();
-            if ($user && Hash::check($request->password, $user->password) && ($user->role->name == "Sale")) {
+            if ($user && Hash::check($request->password, $user->password) && ($user->role->name == __("user_role.sale"))) {
                 $token = $user->createToken(Str::uuid())->plainTextToken;
                 $response = [
                     'user' => new UserResource($user),
