@@ -19,7 +19,6 @@ class KpiActivityResource extends JsonResource
             "id" => $this->id,
             "name" => $this->name,
             "score" => $this->score,
-            "pipeline" => new SettingResource($this->pipeline)
         ];
     }
 }

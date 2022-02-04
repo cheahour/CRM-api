@@ -14,7 +14,7 @@ class APIKpiActivityController extends APIBaseController
 {
     public function index()
     {
-      $kpi_activities = KpiActivity::with("pipeline")->get();
+      $kpi_activities = KpiActivity::all();
       return $this->send_response(new KpiActivityCollection($kpi_activities));
     }
 
@@ -23,20 +23,15 @@ class APIKpiActivityController extends APIBaseController
       $this->validate($request, [
           'name' => 'required|unique:kpi_activities,name,NULL,id,deleted_at,NULL',
           'score' => 'numeric',
-          'pipeline_id' => 'required'
       ]);
       $pipeline = Pipeline::find($request->get("pipeline_id"));
-      if ($pipeline) {
-        $kpi_activity = new KpiActivity([
-            'id' => Str::uuid(),
-            'name' => $request->get('name'),
-            'score' => $request->get('score') ?? 0.0
-        ]);
-        $kpi_activity->pipeline()->associate($pipeline);
-        $kpi_activity->save();
-        return $this->send_response(new KpiActivityResource($kpi_activity));
-      }
-      return $this->send_error(__("custom_error.data_not_found", ["object" => "Pipeline"]));
+      $kpi_activity = new KpiActivity([
+        'id' => Str::uuid(),
+        'name' => $request->get('name'),
+        'score' => $request->get('score') ?? 0.0
+      ]);
+      $kpi_activity->save();
+      return $this->send_response(new KpiActivityResource($kpi_activity));
     }
 
     public function show($id)
@@ -54,15 +49,12 @@ class APIKpiActivityController extends APIBaseController
       $this->validate($request, [
           'name' => 'required',
           'score' => 'numeric',
-          'pipeline_id' => 'required'
       ]);
-      $pipeline = Pipeline::find($request->get("pipeline_id"));
       $kpi_activity = KpiActivity::find($id);
-      if ($kpi_activity && $pipeline) {
+      if ($kpi_activity) {
         if (!(KpiActivity::where("name", "=", $request->get("name"))->withTrashed()->count() > 1)) {
             $kpi_activity->name = $request->get('name');
-            $kpi_activity->score = $request->get('score') ?? 0.0;
-            $kpi_activity->pipeline()->associate($pipeline);
+            $kpi_activity->score = $request->get('score');
             $kpi_activity->save();
             return $this->send_response(new KpiActivityResource($kpi_activity));
         }

@@ -14,7 +14,7 @@ class AlterCustomersTableAddSomeSeveralField extends Migration
     public function up()
     {
         Schema::table('customers', function (Blueprint $table) {
-            $table->string("bandwidth");
+            $table->string("bandwidth")->nullable();
             $table->double("deposit")->nullable();
             $table->double("installation")->nullable();
             $table->integer("payment_term")->nullable();

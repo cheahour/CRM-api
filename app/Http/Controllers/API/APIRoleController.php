@@ -8,7 +8,7 @@ use App\Models\Role;
 
 class APIRoleController extends APIBaseController
 {
-    public function getRoles() {
+    public function get_roles() {
       $roles = Role::all();
       return $this->send_response($roles);
     }

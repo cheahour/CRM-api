@@ -2,83 +2,82 @@
 
 namespace App\Http\Controllers\API;
 
-use App\Models\User;
 use Illuminate\Http\Request;
-use App\Models\Role;
 use App\Http\Resources\User\UserCollection;
 use App\Http\Resources\User\UserResource;
+use App\Repositories\User\UserRepositoryInterface;
+use Validator;
 
 class APIUserController extends APIBaseController {
-    function createSale(Request $request) {
-        $request->validate([
+
+    private UserRepositoryInterface $repository;
+
+    public function __construct(UserRepositoryInterface $repository)
+    {
+        $this->repository = $repository;
+    }
+
+    function create_user(Request $request) {
+        $validator = Validator::make($request->all(), [
             'name' => 'required|string',
             'email' => 'required|string',
-            // 'email' => 'required|string|email|unique:users,email',
             'password' => 'required|min:5',
-            'repeat_password' => 'required|min:5',
+            "user_id" => "required",
             'role_id' => 'required',
         ]);
-        $current_user = auth()->user();
-        $role = Role::find($request->get('role_id'));
-
-        if ($role) {
-            if ($role->id != $current_user->role->id) {
-                if ($request->get("password") == $request->get("repeat_password")) {
-                    $user_id = $request->get("user_id") != null ? $request->get("user_id") : $current_user->id;
-                    $user = new User([
-                        'name' => $request->get('name'),
-                        'email' => $request->get('email'),
-                        'password' => bcrypt($request->get('password')),
-                        'user_id' => $user_id
-                    ]);
-                    $user->role()->associate($role);
-                    $user->save();
-                    return $this->send_response(new UserResource($user));
-                }
-                return $this->send_error(__("custom_error.password_not_match"), [], 500);
-            }
-            return $this->send_error(__("custom_error.no_permission_to_make_change"), [], 500);
+        if ($validator->fails()) {
+            return $this->send_error($validator->errors()->first(), 422);
         }
-        return $this->send_error(__("custom_error.data_not_found", ["object" => "Role"]));
-    }
-
-    function getProfile() {
-        $user = auth()->user();
+        $user = $this->repository->create_user($request);
         if ($user) {
-            $response = new UserResource($user);
-            return $this->send_response($response);
+            return $this->send_response($user);
         }
-        return $this->send_error(__("custom_error.something_went_wrong"), [], 500);
+        return $this->send_error(__("custom_error.something_went_wrong"), 500);
     }
 
-    function getDSMs(Request $request) {
-        $role = Role::whereName("DSM")->first();
-        if ($role != null) {
-            $offset = $request->get("offset") ?? 0;
-            $limit = $request->get("limit") ?? 20;
-            $dsms = User::with("role")->where("role_id", "=", $role->id)->skip($offset)->take($limit)->get();
-            if ($dsms) {
-                return $this->send_response(new UserCollection($dsms));
-            }
-            return $this->send_error(__("custom_error.data_not_found", ["object" => "User"]));
+    public function update_user(Request $request, $id)
+    {
+        $validator = Validator::make($request->all(), [
+            'name' => 'required',
+            'email' => 'required',
+        ]);
+        if($validator->fails()){
+            return $this->send_error($validator->errors()->first(), 422);
         }
-        return $this->send_error(__("custom_error.data_not_found", ["object" => "Role"]));
+        $user = $this->repository->update_user($request, $id);
+        if ($user) {
+            $format = new UserResource($user);
+            return $this->send_response($format);
+        }
+        return $this->send_error(__("custom_error.something_went_wrong"), 500);
     }
 
-    function getSaleExecutives(Request $request) {
-        $dsm_id = $request->get("dsm_id") != null ? $request->get("dsm_id") : auth()->user()->id;
-        $offset = $request->get("offset") ?? 0;
-        $limit = $request->get("limit") ?? 20;
-        $role = Role::whereName("Sale")->first();
-        if ($role) {
-            $sales = User::where("user_id", "=", $dsm_id)
-            ->where("role_id", "=", $role->id)
-            ->with("role")
-            ->skip($offset)
-            ->take($limit)
-            ->get();
-            return $this->send_response(new UserCollection($sales));
+    public function delete_user($id) {
+        $delete = $this->repository->delete_user($id);
+        if ($delete) {
+            return $this->send_response($delete);
         }
-        return $this->send_error(__("custom_error.data_not_found", ["object" => "Role"]));
+        return $this->send_error(__("custom_error.something_went_wrong"), 500);
+    }
+
+    function get_profile() {
+        $user = $this->repository->get_account();
+        if ($user) {
+            $format = new UserResource($user);
+            return $this->send_response($format);
+        }
+        return $this->send_error(__("custom_error.data_not_found", ["object" => "Account"]));
+    }
+
+    function get_dsms(Request $request) {
+        $dsms = $this->repository->get_dsms($request);
+        $format = new UserCollection($dsms);
+        return $this->send_response($format->response()->getData(true));
+    }
+
+    function get_sales(Request $request) {
+        $sales = $this->repository->get_sales($request);
+        $format = new UserCollection($sales);
+        return $this->send_response($format->response()->getData(true));
     }
 }

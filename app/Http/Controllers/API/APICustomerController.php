@@ -4,7 +4,6 @@ namespace App\Http\Controllers\API;
 
 use App\Http\Resources\Customer\CustomerCollection;
 use App\Http\Resources\Customer\CustomerDetailResource;
-use App\Http\Resources\Customer\CustomerResource;
 use App\Rules\PhoneNumber;
 use Illuminate\Http\Request;
 use App\Repositories\Customer\CustomerRepositoryInterface;

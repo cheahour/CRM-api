@@ -25,13 +25,14 @@ use Illuminate\Support\Facades\Route;
 Route::post("login",[AuthController::class,'login']);
 Route::post("sales/login", [AuthController::class, "login_as_sale"]);
 Route::middleware('auth:sanctum')->group(function () {
-    Route::get("profile", [APIUserController::class, "getProfile"]);
+    Route::get("profile", [APIUserController::class, "get_profile"]);
     Route::delete('logout', [AuthController::class, "logout"]);
-    Route::get('roles', [APIRoleController::class, "getRoles"]);
-    Route::post('sales', [APIUserController::class, "createSale"]);
-    Route::get("dsms", [APIUserController::class, "getDSMs"]);
-    Route::get("sale-executives", [APIUserController::class, "getSaleExecutives"]);
-
+    Route::get('roles', [APIRoleController::class, "get_roles"]);
+    Route::post('users', [APIUserController::class, "create_user"]);
+    Route::put('users/{id}', [APIUserController::class, "update_user"]);
+    Route::delete('users/{id}', [APIUserController::class, "delete_user"]);
+    Route::get("dsms", [APIUserController::class, "get_dsms"]);
+    Route::get("sale-executives", [APIUserController::class, "get_sales"]);
     Route::apiResource('packages', APIPackageController::class);
     Route::apiResource('industries', APIIndustryController::class);
     Route::apiResource('territories', APITerritoryController::class);

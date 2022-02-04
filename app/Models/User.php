@@ -10,11 +10,13 @@ use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
 use Illuminate\Contracts\Auth\Access\Authorizable as AuthorizableContract;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\Access\Authorizable;
+use Str;
 
 class User extends Model implements AuthenticatableContract, AuthorizableContract
 {
-    use HasFactory, Notifiable, HasApiTokens, Authenticatable, Authorizable, Uuids;
+    use HasFactory, Notifiable, HasApiTokens, Authenticatable, Authorizable, Uuids, SoftDeletes;
 
     /**
      * The attributes that are mass assignable.
@@ -22,12 +24,13 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
      * @var string[]
      */
     protected $fillable = [
-        'id',
+        // 'id',
         'name',
         'email',
         'password',
         'user_id',
-        'role'
+        'role',
+        'is_default',
     ];
 
     /**
@@ -70,8 +73,8 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
          *
          * @return response()
          */
-        static::creating(function($item) {
-
+        static::creating(function($model) {
+            $model->id = Str::uuid();
         });
 
         /**
@@ -109,5 +112,19 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
         static::deleted(function($item) {
 
         });
+    }
+
+    public static function default_dsm()
+    {
+        return static::where('is_default', '=', true)
+            ->where("email", "=", __("user_account.anonymous_email"))
+            ->first();
+    }
+
+    public static function sales_based_on_dsm(String $id) {
+        $sale_role = Role::whereName(__("user_role.sale"))->first();
+        return static::where('user_id', '=', $id)
+            ->where("role_id", "=", $sale_role->id)
+            ->get();
     }
 }

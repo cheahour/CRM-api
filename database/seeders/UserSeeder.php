@@ -24,13 +24,15 @@ class UserSeeder extends Seeder
             "id" => Str::uuid(),
             'name' => __("user_account.default_head_sale_name"),
             'email' => __("user_account.default_head_sale_email"),
-            'password' => Hash::make(__("user_account.default_password"))
+            'password' => Hash::make(__("user_account.default_password")),
+            "is_default" => true,
         ]);
         $anonymous_dsm = User::create([
             "id" => Str::uuid(),
             "name" => __("user_account.anonymous_name"),
             "email" => __("user_account.anonymous_email"),
-            "password" => Hash::make(__("user_account.default_password"))
+            "password" => Hash::make(__("user_account.default_password")),
+            "is_default" => true,
         ]);
         $default_sale = User::create([
             "id" => Str::uuid(),

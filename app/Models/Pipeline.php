@@ -15,9 +15,4 @@ class Pipeline extends Model
       'id',
       'name',
   ];
-
-  public function kpiActivities()
-  {
-      return $this->hasMany(KpiActivity::class);
-  }
 }
