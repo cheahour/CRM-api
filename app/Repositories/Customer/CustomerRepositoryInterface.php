@@ -14,6 +14,7 @@ use Illuminate\Http\Request;
  */
 
 interface CustomerRepositoryInterface {
+    public function get_sales_pipeline(Request $request);
     public function get_customers(Request $request);
     public function update_customer($id, Request $request);
     public function get_customer($id);

@@ -30,6 +30,13 @@ class APICustomerController extends APIBaseController
         return $this->send_response($format->response()->getData(true));
     }
 
+    public function get_sales_pipeline(Request $request)
+    {
+        $sales_pipeline = $this->repository->get_sales_pipeline($request);
+        $format = new CustomerCollection($sales_pipeline);
+        return $this->send_response($format->response()->getData(true));
+    }
+
     /**
      * Store a newly created resource in storage.
      *
@@ -41,10 +48,10 @@ class APICustomerController extends APIBaseController
         $validator = Validator::make($request->all(), [
             "name" => "required",
             "phone_number" => ["required", new PhoneNumber],
-            "territory_id" => "required",
-            "industry_id" => "required",
-            "kpi_activity_id" => "required",
-            "package_id" => "required",
+            // "territory_id" => "required",
+            // "industry_id" => "required",
+            // "kpi_activity_id" => "required",
+            // "package_id" => "required",
             "remark" => "required",
         ]);
         if ($validator->fails()) {
@@ -84,10 +91,10 @@ class APICustomerController extends APIBaseController
         $validator = Validator::make($request->all(), [
             "name" => "required",
             "phone_number" => ["required", new PhoneNumber],
-            "territory_id" => "required",
-            "industry_id" => "required",
-            "kpi_activity_id" => "required",
-            "package_id" => "required",
+            // "territory_id" => "required",
+            // "industry_id" => "required",
+            // "kpi_activity_id" => "required",
+            // "package_id" => "required",
             "remark" => "required",
         ]);
         if ($validator->fails()) {

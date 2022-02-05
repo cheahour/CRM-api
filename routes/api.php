@@ -31,6 +31,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('users', [APIUserController::class, "create_user"]);
     Route::put('users/{id}', [APIUserController::class, "update_user"]);
     Route::delete('users/{id}', [APIUserController::class, "delete_user"]);
+    Route::get("sale-admins", [APIUserController::class, "get_sale_admins"]);
     Route::get("dsms", [APIUserController::class, "get_dsms"]);
     Route::get("sale-executives", [APIUserController::class, "get_sales"]);
     Route::apiResource('packages', APIPackageController::class);
@@ -42,4 +43,5 @@ Route::middleware('auth:sanctum')->group(function () {
 
 Route::middleware('auth:sanctum')->group(function () {
     Route::apiResource('sales/customers', APICustomerController::class);
+    Route::get("sales/sales-pipeline", [APICustomerController::class, "get_sales_pipeline"]);
 });

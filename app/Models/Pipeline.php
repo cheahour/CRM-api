@@ -15,4 +15,8 @@ class Pipeline extends Model
       'id',
       'name',
   ];
+
+  public function customers() {
+    return $this->hasMany(Customer::class);
+  }
 }

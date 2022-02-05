@@ -36,6 +36,7 @@ class CustomerDetailResource extends JsonResource
             "industry" => new SettingResource($this->industry),
             "territory" => new SettingResource($this->territory),
             "kpi_activity" => new KpiActivityResource($this->kpi_activity),
+            "pipeline" => new SettingResource($this->pipeline),
             "package" => new SettingResource($this->package),
         ];
     }

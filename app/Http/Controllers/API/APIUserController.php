@@ -69,6 +69,12 @@ class APIUserController extends APIBaseController {
         return $this->send_error(__("custom_error.data_not_found", ["object" => "Account"]));
     }
 
+    function get_sale_admins(Request $request) {
+        $dsms = $this->repository->get_sale_admins($request);
+        $format = new UserCollection($dsms);
+        return $this->send_response($format->response()->getData(true));
+    }
+
     function get_dsms(Request $request) {
         $dsms = $this->repository->get_dsms($request);
         $format = new UserCollection($dsms);

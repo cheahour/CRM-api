@@ -16,18 +16,22 @@ class RoleSeeder extends Seeder
     public function run()
     {
       DB::table('roles')->insert([
-          [
-              'id' => Str::uuid(),
-              'name' => __("user_role.head_sale")
-          ],
-          [
-              'id' => Str::uuid(),
-              'name' => __("user_role.dsm"),
-          ],
-          [
-              'id' => Str::uuid(),
-              'name' => __("user_role.sale"),
-          ],
+        [
+            'id' => Str::uuid(),
+            'name' => __("user_role.head_sale")
+        ],
+        [
+            "id" => Str::uuid(),
+            "name" => __("user_role.sale_admin"),
+        ],
+        [
+            'id' => Str::uuid(),
+            'name' => __("user_role.dsm"),
+        ],
+        [
+            'id' => Str::uuid(),
+            'name' => __("user_role.sale"),
+        ],
       ]);
     }
 }

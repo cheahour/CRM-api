@@ -17,6 +17,20 @@ class UserRepository implements UserRepositoryInterface {
         }
     }
 
+    public function get_sale_admins(Request $request)
+    {
+        $limit = $request->query("limit");
+        $role = Role::whereName(__("user_role.sale_admin"))->first();
+        if ($role) {
+            $dsms = User::with("role")
+                ->where("role_id", "=", $role->id)
+                ->orderBy("name")
+                ->paginate($limit);
+            return $dsms;
+        }
+        return [];
+    }
+
     public function get_dsms(Request $request)
     {
         $limit = $request->query("limit");
