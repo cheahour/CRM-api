@@ -48,10 +48,9 @@ class APICustomerController extends APIBaseController
         $validator = Validator::make($request->all(), [
             "name" => "required",
             "phone_number" => ["required", new PhoneNumber],
-            // "territory_id" => "required",
-            // "industry_id" => "required",
-            // "kpi_activity_id" => "required",
-            // "package_id" => "required",
+            "pipeline_id" => "required",
+            "territory_id" => "required",
+            "package_id" => "required",
             "remark" => "required",
         ]);
         if ($validator->fails()) {
@@ -91,10 +90,9 @@ class APICustomerController extends APIBaseController
         $validator = Validator::make($request->all(), [
             "name" => "required",
             "phone_number" => ["required", new PhoneNumber],
-            // "territory_id" => "required",
-            // "industry_id" => "required",
-            // "kpi_activity_id" => "required",
-            // "package_id" => "required",
+            "territory_id" => "required",
+            "pipeline_id" => "required",
+            "package_id" => "required",
             "remark" => "required",
         ]);
         if ($validator->fails()) {

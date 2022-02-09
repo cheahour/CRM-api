@@ -53,7 +53,7 @@ class CustomerRepository implements CustomerRepositoryInterface {
         $territory = Territory::find($request->get("territory_id"));
         $industry = Industry::find($request->get("industry_id"));
         $kpi_activity = KpiActivity::find($request->get("kpi_activity_id"));
-        $pipeline = KpiActivity::find($request->get("pipeline_id"));
+        $pipeline = Pipeline::find($request->get("pipeline_id"));
         $package = Package::find($request->get("package_id"));
         $customer = new Customer([
             "id" => Str::uuid(),
@@ -75,7 +75,7 @@ class CustomerRepository implements CustomerRepositoryInterface {
             "remark" => $request->get("remark"),
         ]);
         if ($territory) {
-            $customer->territory()->associate($territory);
+            $customer->territory()->fill($territory);
         }
         if ($industry) {
             $customer->industry()->associate($industry);

@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\API\APICustomerController;
+use App\Http\Controllers\API\APIDashboardController;
 use App\Http\Controllers\API\AuthController;
 use App\Http\Controllers\API\APIRoleController;
 use App\Http\Controllers\API\APIUserController;
@@ -44,4 +45,13 @@ Route::middleware('auth:sanctum')->group(function () {
 Route::middleware('auth:sanctum')->group(function () {
     Route::apiResource('sales/customers', APICustomerController::class);
     Route::get("sales/sales-pipeline", [APICustomerController::class, "get_sales_pipeline"]);
+});
+
+Route::middleware('auth:sanctum')->group(function () {
+    Route::get('dashboard/customers-total', [APIDashboardController::class, "get_customers_total"]);
+    Route::get('dashboard/sales-pipeline-total', [APIDashboardController::class, "get_sales_pipeline_total"]);
+    Route::get('dashboard/most-sale-package', [APIDashboardController::class, "get_most_sale_package"]);
+    Route::get("dashboard/sale-packages", [APIDashboardController::class, "get_sale_packages"]);
+    Route::get('dashboard/most-sale-territory', [APIDashboardController::class, "get_most_sale_territory"]);
+    Route::get("dashboard/sale-territories", [APIDashboardController::class, "get_sale_territories"]);
 });
