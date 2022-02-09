@@ -15,7 +15,7 @@ class APIKpiActivityController extends APIBaseController
     public function index()
     {
       $kpi_activities = KpiActivity::all();
-      return $this->send_response(new KpiActivityCollection($kpi_activities));
+      return $this->send_response($kpi_activities);
     }
 
     public function store(Request $request)
