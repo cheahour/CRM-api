@@ -13,7 +13,7 @@ curl -X POST \
     "http://127.0.0.1:8000/api/login" \
     -H "Content-Type: application/json" \
     -H "Accept: application/json" \
-    -d '{"email":"ipsam","password":"quia"}'
+    -d '{"email":"est","password":"recusandae"}'
 
 ```
 
@@ -28,8 +28,8 @@ let headers = {
 };
 
 let body = {
-    "email": "ipsam",
-    "password": "quia"
+    "email": "est",
+    "password": "recusandae"
 }
 
 fetch(url, {
@@ -76,7 +76,7 @@ fetch(url, {
 </form>
 
 
-## api/users
+## api/logout
 
 
 
@@ -85,14 +85,14 @@ fetch(url, {
 
 ```bash
 curl -X DELETE \
-    "http://127.0.0.1:8000/api/users" \
+    "http://127.0.0.1:8000/api/logout" \
     -H "Content-Type: application/json" \
     -H "Accept: application/json"
 ```
 
 ```javascript
 const url = new URL(
-    "http://127.0.0.1:8000/api/users"
+    "http://127.0.0.1:8000/api/logout"
 );
 
 let headers = {
@@ -108,24 +108,24 @@ fetch(url, {
 ```
 
 
-<div id="execution-results-DELETEapi-users" hidden>
-    <blockquote>Received response<span id="execution-response-status-DELETEapi-users"></span>:</blockquote>
-    <pre class="json"><code id="execution-response-content-DELETEapi-users"></code></pre>
+<div id="execution-results-DELETEapi-logout" hidden>
+    <blockquote>Received response<span id="execution-response-status-DELETEapi-logout"></span>:</blockquote>
+    <pre class="json"><code id="execution-response-content-DELETEapi-logout"></code></pre>
 </div>
-<div id="execution-error-DELETEapi-users" hidden>
+<div id="execution-error-DELETEapi-logout" hidden>
     <blockquote>Request failed with error:</blockquote>
-    <pre><code id="execution-error-message-DELETEapi-users"></code></pre>
+    <pre><code id="execution-error-message-DELETEapi-logout"></code></pre>
 </div>
-<form id="form-DELETEapi-users" data-method="DELETE" data-path="api/users" data-authed="0" data-hasfiles="0" data-headers='{"Content-Type":"application\/json","Accept":"application\/json"}' onsubmit="event.preventDefault(); executeTryOut('DELETEapi-users', this);">
+<form id="form-DELETEapi-logout" data-method="DELETE" data-path="api/logout" data-authed="0" data-hasfiles="0" data-headers='{"Content-Type":"application\/json","Accept":"application\/json"}' onsubmit="event.preventDefault(); executeTryOut('DELETEapi-logout', this);">
 <h3>
     Request&nbsp;&nbsp;&nbsp;
-        <button type="button" style="background-color: #8fbcd4; padding: 5px 10px; border-radius: 5px; border-width: thin;" id="btn-tryout-DELETEapi-users" onclick="tryItOut('DELETEapi-users');">Try it out ⚡</button>
-    <button type="button" style="background-color: #c97a7e; padding: 5px 10px; border-radius: 5px; border-width: thin;" id="btn-canceltryout-DELETEapi-users" onclick="cancelTryOut('DELETEapi-users');" hidden>Cancel</button>&nbsp;&nbsp;
-    <button type="submit" style="background-color: #6ac174; padding: 5px 10px; border-radius: 5px; border-width: thin;" id="btn-executetryout-DELETEapi-users" hidden>Send Request 💥</button>
+        <button type="button" style="background-color: #8fbcd4; padding: 5px 10px; border-radius: 5px; border-width: thin;" id="btn-tryout-DELETEapi-logout" onclick="tryItOut('DELETEapi-logout');">Try it out ⚡</button>
+    <button type="button" style="background-color: #c97a7e; padding: 5px 10px; border-radius: 5px; border-width: thin;" id="btn-canceltryout-DELETEapi-logout" onclick="cancelTryOut('DELETEapi-logout');" hidden>Cancel</button>&nbsp;&nbsp;
+    <button type="submit" style="background-color: #6ac174; padding: 5px 10px; border-radius: 5px; border-width: thin;" id="btn-executetryout-DELETEapi-logout" hidden>Send Request 💥</button>
     </h3>
 <p>
 <small class="badge badge-red">DELETE</small>
- <b><code>api/users</code></b>
+ <b><code>api/logout</code></b>
 </p>
 </form>
 

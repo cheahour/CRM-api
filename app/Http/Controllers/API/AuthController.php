@@ -2,42 +2,59 @@
 
 namespace App\Http\Controllers\API;
 
-use App\Http\Resources\AuthResource;
+use App\Http\Resources\User\UserResource;
 use App\Models\User;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 
 class AuthController extends APIBaseController
 {
-    /**
-     * @group Authentication
-     * @bodyParam   email    string  required
-     * @bodyParam   password    string  required
-     */
-    function login(Request $request)
-    {
+    function login(Request $request) {
+        $request->validate([
+            "email" => "required|string",
+            "password" => "required|string",
+        ]);
         $user= User::where('email', $request->email)->first();
         if (!$user || !Hash::check($request->password, $user->password)) {
-            return $this->sendError('These credentials do not match our records.');
+            return $this->send_error(__("custom_error.login_failed"));
         }
-
+        if ($user->role->name == __("user_role.sale")) {
+            return $this->send_error(__("custom_error.no_permission_to_sign_in"));
+        }
         $token = $user->createToken(Str::uuid())->plainTextToken;
         $response = [
-            'user' => new AuthResource($user),
+            'user' => new UserResource($user),
             'token' => $token
         ];
-
-        return $this->sendResponse($response);
+        return $this->send_response($response);
     }
 
-    /**
-     * @group Authentication
-     */
+    public function login_as_sale(Request $request) {
+        $request->validate([
+            "email" => "required|string",
+            "password" => "required|string",
+        ]);
+        $email = $request->get("email");
+        $password = $request->get("password");
+        if ($email != null && $password != null) {
+            $user= User::where('email', $request->email)->first();
+            if ($user && Hash::check($request->password, $user->password) && ($user->role->name == __("user_role.sale"))) {
+                $token = $user->createToken(Str::uuid())->plainTextToken;
+                $response = [
+                    'user' => new UserResource($user),
+                    'token' => $token
+                ];
+                return $this->send_response($response);
+            }
+            return $this->send_error(__("custom_error.login_failed"));
+        }
+        return $this->send_error(__("custom_error.text_field_required"));
+    }
+
     public function logout()
     {
         auth()->user()->tokens()->delete();
-        return $this->sendResponse(true);
+        return $this->send_response(true);
     }
 }

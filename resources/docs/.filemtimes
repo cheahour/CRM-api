@@ -1,12 +1,14 @@
 # GENERATED. YOU SHOULDN'T MODIFY OR DELETE THIS FILE.
 # Scribe uses this file to know when you change something manually in your docs.
-resources/docs/groups/endpoints.md=1633222018
+resources/docs/groups/endpoints.md=1636877955
 resources/docs/index.md=1633222018
 resources/docs/authentication.md=1633222018
-resources/docs/groups/authentication.md=1633222018
-resources/docs/groups/industries.md=1633222018
-resources/docs/groups/user-management.md=1633222018
-resources/docs/groups/packages.md=1633222018
-resources/docs/groups/kpi-activities.md=1633222018
-resources/docs/groups/pipelines.md=1633222018
-resources/docs/groups/territories.md=1633222018
+resources/docs/groups/authentication.md=1636877955
+resources/docs/groups/industries.md=1636877955
+resources/docs/groups/user-management.md=1633764223
+resources/docs/groups/packages.md=1636877955
+resources/docs/groups/kpi-activities.md=1636877955
+resources/docs/groups/pipelines.md=1636877955
+resources/docs/groups/territories.md=1636877955
+resources/docs/groups/roles.md=1637512640
+resources/docs/groups/sale-management.md=1636877955

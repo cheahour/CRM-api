@@ -16,7 +16,6 @@ class CreatePipelinesTable extends Migration
         Schema::create('pipelines', function (Blueprint $table) {
           $table->uuid('id')->primary();
           $table->string('name');
-          $table->float('score')->default(0.0);
           $table->timestamps();
           $table->softDeletes();
         });

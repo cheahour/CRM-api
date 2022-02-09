@@ -85,7 +85,7 @@ curl -X POST \
     -H "Authorization: Bearer {token}" \
     -H "Content-Type: application/json" \
     -H "Accept: application/json" \
-    -d '{"name":"consequatur"}'
+    -d '{"name":"quisquam"}'
 
 ```
 
@@ -101,7 +101,7 @@ let headers = {
 };
 
 let body = {
-    "name": "consequatur"
+    "name": "quisquam"
 }
 
 fetch(url, {
@@ -163,7 +163,7 @@ fetch(url, {
 
 ```bash
 curl -X GET \
-    -G "http://127.0.0.1:8000/api/territories/harum" \
+    -G "http://127.0.0.1:8000/api/territories/eum" \
     -H "Authorization: Bearer {token}" \
     -H "Content-Type: application/json" \
     -H "Accept: application/json"
@@ -171,7 +171,7 @@ curl -X GET \
 
 ```javascript
 const url = new URL(
-    "http://127.0.0.1:8000/api/territories/harum"
+    "http://127.0.0.1:8000/api/territories/eum"
 );
 
 let headers = {
@@ -238,7 +238,7 @@ fetch(url, {
 
 ```bash
 curl -X PUT \
-    "http://127.0.0.1:8000/api/territories/consequatur" \
+    "http://127.0.0.1:8000/api/territories/eos" \
     -H "Authorization: Bearer {token}" \
     -H "Content-Type: application/json" \
     -H "Accept: application/json" \
@@ -248,7 +248,7 @@ curl -X PUT \
 
 ```javascript
 const url = new URL(
-    "http://127.0.0.1:8000/api/territories/consequatur"
+    "http://127.0.0.1:8000/api/territories/eos"
 );
 
 let headers = {
@@ -328,7 +328,7 @@ true
 
 ```bash
 curl -X DELETE \
-    "http://127.0.0.1:8000/api/territories/corrupti" \
+    "http://127.0.0.1:8000/api/territories/itaque" \
     -H "Authorization: Bearer {token}" \
     -H "Content-Type: application/json" \
     -H "Accept: application/json"
@@ -336,7 +336,7 @@ curl -X DELETE \
 
 ```javascript
 const url = new URL(
-    "http://127.0.0.1:8000/api/territories/corrupti"
+    "http://127.0.0.1:8000/api/territories/itaque"
 );
 
 let headers = {

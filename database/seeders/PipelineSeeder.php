@@ -18,18 +18,19 @@ class PipelineSeeder extends Seeder
         DB::table('pipelines')->insert([
             [
                 'id' => Str::uuid(),
-                'name' => 'Hot prospect',
-                'score' => 10
+                'name' => __("pipeline.hot_prospect"),
             ],
             [
                 'id' => Str::uuid(),
-                'name' => 'New lead',
-                'score' => 5
+                'name' => __("pipeline.new_lead"),
             ],
             [
                 'id' => Str::uuid(),
-                'name' => 'Prospect',
-                'score' => 7
+                'name' => __("pipeline.prospect")
+            ],
+            [
+                'id' => Str::uuid(),
+                'name' => __("pipeline.customer")
             ],
         ]);
     }

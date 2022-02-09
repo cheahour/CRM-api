@@ -12,18 +12,17 @@ class APIBaseController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function sendResponse($result)
+    public function send_response($result)
     {
         return response()->json($result, 201);
     }
-
 
     /**
      * return error response.
      *
      * @return \Illuminate\Http\Response
      */
-    public function sendError($error, $errorMessages = [], $code = 404)
+    public function send_error($error, $errorMessages = [], $code = 404)
     {
     	$response = [
             'message' => $error,

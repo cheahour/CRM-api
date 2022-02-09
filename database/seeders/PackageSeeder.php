@@ -3,6 +3,8 @@
 namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
 
 class PackageSeeder extends Seeder
 {
@@ -16,19 +18,15 @@ class PackageSeeder extends Seeder
         DB::table('packages')->insert([
             [
                 'id' => Str::uuid(),
-                'name' => 'Fiber',
+                'name' => 'Today Fiber',
             ],
             [
                 'id' => Str::uuid(),
-                'name' => 'BBI',
+                'name' => 'Today Fiber plus',
             ],
             [
                 'id' => Str::uuid(),
-                'name' => 'DBI',
-            ],
-            [
-                'id' => Str::uuid(),
-                'name' => 'xFast',
+                'name' => 'Today Simply fast',
             ],
         ]);
     }

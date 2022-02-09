@@ -10,97 +10,58 @@ use Illuminate\Support\Str;
 
 class APIPipelineController extends APIBaseController
 {
-    /**
-     * @group Pipelines
-     * @header Authorization Bearer {token}
-     * @authenticated
-     * @responseFile status=201 storage/responses/pipelines.get.json
-     */
     public function index()
     {
       $pipelines = Pipeline::all();
-      return $this->sendResponse($pipelines);
+      return $this->send_response($pipelines);
     }
 
-    /**
-     * @group Pipelines
-     * @header Authorization Bearer {token}
-     * @authenticated
-     * @bodyParam   name    string  required
-     * @responseFile status=201 storage/responses/pipeline.get.json
-     */
     public function store(Request $request)
     {
       $this->validate($request, [
           'name' => 'required|unique:pipelines,name,NULL,id,deleted_at,NULL',
-          'score' => 'numeric'
       ]);
       $pipeline = new Pipeline([
           'id' => Str::uuid(),
           'name' => $request->get('name'),
-          'score' => $request->get('score') ?? 0.0,
       ]);
       $pipeline->save();
-      return $this->sendResponse($pipeline);
+      return $this->send_response($pipeline);
     }
 
-    /**
-     * @group Pipelines
-     * @header Authorization Bearer {token}
-     * @authenticated
-     * @param  int  $id
-     * @responseFile status=201 storage/responses/pipeline.get.json
-     */
     public function show($id)
     {
       $pipeline = Pipeline::find($id);
       if ($pipeline) {
-        return $this->sendResponse($pipeline);
+        return $this->send_response($pipeline);
       } else {
-        return $this->sendError(["message" => "Pipeline not found"], 404);
+        return $this->send_error(__("custom_error.data_not_found", ["object" => "Pipeline"]));
       }
     }
 
-    /**
-     * @group Pipelines
-     * @header Authorization Bearer {token}
-     * @authenticated
-     * @param  int  $id
-     * @bodyParam   name    string  required
-     * @response 201 true
-     */
     public function update(Request $request, $id)
     {
       $this->validate($request, [
           'name' => 'required|unique:pipelines,name',
-          'score' => 'numeric'
       ]);
       $pipeline = Pipeline::find($id);
       if ($pipeline) {
         $pipeline->name = $request->get('name');
-        $pipeline->score = $request->get('score') ?? 0.0;
         $pipeline->save();
-        return $this->sendResponse($pipeline);
+        return $this->send_response($pipeline);
       } else {
-        return $this->sendError(["message" => "Pipeline not found"], 404);
+        return $this->send_error(__("custom_error.data_not_found", ["object" => "Pipeline"]));
       }
     }
 
-    /**
-     * @group Pipelines
-     * @header Authorization Bearer {token}
-     * @authenticated
-     * @param  int  $id
-     * @response 201 true
-     */
     public function destroy($id)
     {
       $pipeline = Pipeline::find($id);
       if ($pipeline) {
         $pipeline = $pipeline->delete();
-        return $this->sendResponse($pipeline);
+        return $this->send_response($pipeline);
       } else {
-        return $this->sendError(["message" => "Pipeline not found"], 404);
+        return $this->send_error(__("custom_error.data_not_found", ["object" => "Pipeline"]));
       }
     }
 }

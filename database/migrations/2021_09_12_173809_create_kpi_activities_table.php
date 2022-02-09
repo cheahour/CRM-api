@@ -16,6 +16,7 @@ class CreateKPIActivitiesTable extends Migration
         Schema::create('kpi_activities', function (Blueprint $table) {
             $table->uuid('id')->primary();
             $table->string('name');
+            $table->float('score')->default(0.0);
             $table->timestamps();
             $table->softDeletes();
         });

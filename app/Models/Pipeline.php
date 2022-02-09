@@ -10,9 +10,13 @@ use App\Traits\Uuids;
 class Pipeline extends Model
 {
   use HasFactory, Uuids, SoftDeletes;
+
   protected $fillable = [
       'id',
       'name',
-      'score',
   ];
+
+  public function customers() {
+    return $this->hasMany(Customer::class);
+  }
 }

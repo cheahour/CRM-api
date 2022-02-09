@@ -3,8 +3,9 @@
 namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
+use App\Models\Role;
+use App\Models\User;
 use Illuminate\Support\Str;
 
 class UserSeeder extends Seeder
@@ -16,42 +17,37 @@ class UserSeeder extends Seeder
      */
     public function run()
     {
-        DB::table('users')->insert([
-            [
-                'id' => Str::uuid(),
-                'name' => 'Manager',
-                'email' => 'super@manager.com',
-                'password' => Hash::make('12345'),
-                'is_admin' => true,
-            ],
-            [
-                'id' => Str::uuid(),
-                'name' => 'Sale manager 1',
-                'email' => 'sale@manger1.com',
-                'password' => Hash::make('12345'),
-                'is_admin' => true,
-            ],
-            [
-                'id' => Str::uuid(),
-                'name' => 'Sale manager 2',
-                'email' => 'sale@manger2.com',
-                'password' => Hash::make('12345'),
-                'is_admin' => true,
-            ],
-            [
-                'id' => Str::uuid(),
-                'name' => 'Sale 1',
-                'email' => 'sale1@test.com',
-                'password' => Hash::make('12345'),
-                'is_admin' => true,
-            ],
-            [
-                'id' => Str::uuid(),
-                'name' => 'Sale 2',
-                'email' => 'sale2@test.com',
-                'password' => Hash::make('12345'),
-                'is_admin' => true,
-            ]
+        $head_sale = Role::whereName(__("user_role.head_sale"))->firstOrFail();
+        $dsm = Role::whereName(__("user_role.dsm"))->firstOrFail();
+        $sale = Role::whereName(__("user_role.sale"))->firstOrFail();
+        $manager = User::create([
+            "id" => Str::uuid(),
+            'name' => __("user_account.default_head_sale_name"),
+            'email' => __("user_account.default_head_sale_email"),
+            'password' => Hash::make(__("user_account.default_password")),
+            "is_default" => true,
         ]);
+        $anonymous_dsm = User::create([
+            "id" => Str::uuid(),
+            "name" => __("user_account.anonymous_name"),
+            "email" => __("user_account.anonymous_email"),
+            "password" => Hash::make(__("user_account.default_password")),
+            "is_default" => true,
+        ]);
+        $default_sale = User::create([
+            "id" => Str::uuid(),
+            "name" => __("user_account.mock_sale_name"),
+            "email" => __("user_account.mock_sale_email"),
+            "password" => Hash::make(__("user_account.default_password")),
+            "user_id" => $anonymous_dsm->id,
+        ]);
+
+        $manager->role()->associate($head_sale);
+        $anonymous_dsm->role()->associate($dsm);
+        $default_sale->role()->associate($sale);
+
+        $manager->save();
+        $anonymous_dsm->save();
+        $default_sale->save();
     }
 }
