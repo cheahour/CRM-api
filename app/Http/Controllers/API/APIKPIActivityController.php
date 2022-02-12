@@ -8,7 +8,7 @@ use App\Models\KpiActivity;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 
-class APIKpiActivityController extends APIBaseController
+class APIKPIActivityController extends APIBaseController
 {
     public function index()
     {
