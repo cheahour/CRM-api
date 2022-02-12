@@ -24,7 +24,6 @@ class APIKpiActivityController extends APIBaseController
           'name' => 'required|unique:kpi_activities,name,NULL,id,deleted_at,NULL',
           'score' => 'numeric',
       ]);
-      $pipeline = Pipeline::find($request->get("pipeline_id"));
       $kpi_activity = new KpiActivity([
         'id' => Str::uuid(),
         'name' => $request->get('name'),

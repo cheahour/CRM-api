@@ -73,9 +73,10 @@ class CustomerRepository implements CustomerRepositoryInterface {
             "billing_date" => $request->get("billing_date"),
             "next_follow_up_date" => $request->get("next_follow_up_date"),
             "remark" => $request->get("remark"),
+            "user_id" => auth()->user()->id,
         ]);
         if ($territory) {
-            $customer->territory()->fill($territory);
+            $customer->territory()->associate($territory);
         }
         if ($industry) {
             $customer->industry()->associate($industry);
