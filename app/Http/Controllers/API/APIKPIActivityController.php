@@ -3,10 +3,8 @@
 namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\API\APIBaseController;
-use App\Http\Resources\KpiActivity\KpiActivityCollection;
 use App\Http\Resources\KpiActivity\KpiActivityResource;
 use App\Models\KpiActivity;
-use App\Models\Pipeline;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 
