@@ -11,6 +11,8 @@ class KPIActivity extends Model
 {
     use HasFactory, Uuids, SoftDeletes;
 
+    public $table = "kpi_activities";
+
     protected $fillable = [
         'id',
         'name',
