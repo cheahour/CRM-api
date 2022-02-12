@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use App\Traits\Uuids;
 
-class KpiActivity extends Model
+class KPIActivity extends Model
 {
     use HasFactory, Uuids, SoftDeletes;
 

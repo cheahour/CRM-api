@@ -4,7 +4,7 @@ namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\API\APIBaseController;
 use App\Http\Resources\KpiActivity\KpiActivityResource;
-use App\Models\KpiActivity;
+use App\Models\KPIActivity;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 
@@ -12,7 +12,7 @@ class APIKPIActivityController extends APIBaseController
 {
     public function index()
     {
-      $kpi_activities = KpiActivity::all();
+      $kpi_activities = KPIActivity::all();
       return $this->send_response($kpi_activities);
     }
 
@@ -22,7 +22,7 @@ class APIKPIActivityController extends APIBaseController
           'name' => 'required|unique:kpi_activities,name,NULL,id,deleted_at,NULL',
           'score' => 'numeric',
       ]);
-      $kpi_activity = new KpiActivity([
+      $kpi_activity = new KPIActivity([
         'id' => Str::uuid(),
         'name' => $request->get('name'),
         'score' => $request->get('score') ?? 0.0
@@ -33,7 +33,7 @@ class APIKPIActivityController extends APIBaseController
 
     public function show($id)
     {
-      $kpi_activity = KpiActivity::find($id);
+      $kpi_activity = KPIActivity::find($id);
       if ($kpi_activity) {
         return $this->send_response($kpi_activity);
       } else {
@@ -47,9 +47,9 @@ class APIKPIActivityController extends APIBaseController
           'name' => 'required',
           'score' => 'numeric',
       ]);
-      $kpi_activity = KpiActivity::find($id);
+      $kpi_activity = KPIActivity::find($id);
       if ($kpi_activity) {
-        if (!(KpiActivity::where("name", "=", $request->get("name"))->withTrashed()->count() > 1)) {
+        if (!(KPIActivity::where("name", "=", $request->get("name"))->withTrashed()->count() > 1)) {
             $kpi_activity->name = $request->get('name');
             $kpi_activity->score = $request->get('score');
             $kpi_activity->save();
@@ -62,7 +62,7 @@ class APIKPIActivityController extends APIBaseController
 
     public function destroy($id)
     {
-      $kpi_activity = KpiActivity::find($id);
+      $kpi_activity = KPIActivity::find($id);
       if ($kpi_activity) {
         $kpi_activity = $kpi_activity->delete();
         return $this->send_response($kpi_activity);
