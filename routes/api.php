@@ -48,7 +48,10 @@ Route::middleware('auth:sanctum')->group(function () {
 });
 
 Route::middleware('auth:sanctum')->group(function () {
+    Route::get("dashboard/summary", [APIDashboardController::class, "dashboard_summary"]);
     Route::get('dashboard/customers-total', [APIDashboardController::class, "get_customers_total"]);
+    Route::get("dashboard/customers-count-every-dsms", [APIDashboardController::class, "get_customers_count_every_dsms"]);
+    Route::get('dashboard/customers-count-every-sales', [APIDashboardController::class, "get_customers_count_every_sales"]);
     Route::get('dashboard/sales-pipeline-total', [APIDashboardController::class, "get_sales_pipeline_total"]);
     Route::get('dashboard/most-sale-package', [APIDashboardController::class, "get_most_sale_package"]);
     Route::get("dashboard/sale-packages", [APIDashboardController::class, "get_sale_packages"]);

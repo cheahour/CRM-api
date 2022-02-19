@@ -32,7 +32,8 @@ class Customer extends Model
         "expected_closed_date",
         "billing_date",
         "next_follow_up_date",
-        "remark"
+        "remark",
+        "user_id"
     ];
 
     public static function boot()
@@ -40,7 +41,6 @@ class Customer extends Model
         parent::boot();
         static::creating(function ($model) {
             $model->id = Str::uuid();
-            $model->user_id = auth()->user()->id;
         });
     }
 
@@ -77,5 +77,20 @@ class Customer extends Model
     public function package()
     {
         return $this->belongsTo(Package::class);
+    }
+
+    public static function get_customers_count_every_dsms()
+    {
+        $dsms = User::dsms();
+        $sales = User::sales();
+        $customers_count = static::all()
+        ->groupBy("user_id");
+        return $customers_count;
+    }
+
+    public static function get_customers_count_every_sales()
+    {
+        return static::all()
+        ->groupBy("user_id");
     }
 }

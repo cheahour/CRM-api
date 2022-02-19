@@ -57,7 +57,7 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
         return $this->belongsTo(Role::class);
     }
 
-    public function customer() {
+    public function customers() {
         return $this->hasMany(Customer::class);
     }
 
@@ -119,6 +119,21 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
         return static::where('is_default', '=', true)
             ->where("email", "=", __("user_account.anonymous_email"))
             ->first();
+    }
+
+    public static function dsms()
+    {
+        $dsm_role = Role::whereName(__("user_role.dsm"))->first();
+        return static::where("role_id", "=", $dsm_role->id)
+            ->orderBy("name")
+            ->get();
+    }
+
+    public static function sales()
+    {
+        $sale_role = Role::whereName(__("user_role.sale"))->first();
+        return static::where("role_id", "=", $sale_role->id)
+            ->get();
     }
 
     public static function sales_based_on_dsm(String $id) {

@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers\API;
 
-use App\Http\Resources\Setting\SettingResource;
 use App\Models\Package;
 use App\Models\Territory;
 use App\Repositories\Dashboard\DashboardRepositoryInterface;
@@ -15,6 +14,39 @@ class APIDashboardController extends APIBaseController
     public function __construct(DashboardRepositoryInterface $repository)
     {
         $this->repository = $repository;
+    }
+
+    public function dashboard_summary(Request $request)
+    {
+        $customers_total = $this->repository->get_customers_total($request);
+        $sales_pipeline_total = $this->repository->get_sales_pipeline_total($request);
+        $most_sale_package = $this->repository->get_most_sale_package($request);
+        $most_sale_territory = $this->repository->get_most_sale_territory($request);
+        $customers_by_dsms = $this->repository->get_customers_count_every_dsms($request);
+        $customers_count_every_sales = $this->repository->get_customers_count_every_sales($request);
+        $payment_terms = $this->repository->get_customers_payment_term($request);
+        $response = [
+            "customers_total" => $customers_total,
+            "sales_pipeline_total" => $sales_pipeline_total,
+            "most_sale_package" => $most_sale_package,
+            "most_sale_territory" => $most_sale_territory,
+            "customers_sale_by_dsms" => $customers_by_dsms,
+            "customers_sale_by_sales" => $customers_count_every_sales,
+            "payment_terms" => $payment_terms,
+        ];
+        return $this->send_response($response);
+    }
+
+    public function get_customers_count_every_dsms(Request $request)
+    {
+        $response = $this->repository->get_customers_count_every_dsms($request);
+        return $this->send_response($response);
+    }
+
+    public function get_customers_count_every_sales(Request $request)
+    {
+        $response = $this->repository->get_customers_count_every_sales($request);
+        return $this->send_response($response);
     }
 
     public function get_customers_total(Request $request)
