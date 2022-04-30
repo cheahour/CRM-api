@@ -93,4 +93,11 @@ class Customer extends Model
         return static::all()
         ->groupBy("user_id");
     }
+
+    public static function filterPipeline(String $name)
+    {
+        $pipeline = Pipeline::whereName($name)->first();
+        return static::all()
+        ->where("pipeline_id", $pipeline->id);
+    }
 }
