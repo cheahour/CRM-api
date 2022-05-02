@@ -15,7 +15,7 @@ use Carbon\Carbon;
 use Illuminate\Http\Request;
 
 class DashboardRepository implements DashboardRepositoryInterface {
-    public function get_customers_count_every_dsms(Request $request)
+    public function get_customers_pipeline_by_user(Request $request)
     {
         $role = UserRoleType::fromValue(auth()->user()->role->name);
         $query_month = $request->query("month") ?? Carbon::now()->month;
@@ -80,13 +80,13 @@ class DashboardRepository implements DashboardRepositoryInterface {
 
     public function get_customers_total(Request $request) {
         $role = UserRoleType::fromValue(auth()->user()->role->name);
-        $query_month = $request->query("month") ?? Carbon::now();
         $customer_pipeline = Pipeline::whereName(__("pipeline.customer"))->first();
-
+        $from_date = $request->date("from_date");
+        $to_date = $request->date("to_date");
         if ($role->is(UserRoleType::HeadSale) || $role->is(UserRoleType::SaleAdmin))
         {
             return Customer::filterPipeline(__("pipeline.customer"))
-            ->whereMonth("updated_at", $query_month)
+            ->whereBetween("updated_at", [$from_date, $to_date])
             ->count();
         }
         else if ($role->is(UserRoleType::DSM))
@@ -96,8 +96,7 @@ class DashboardRepository implements DashboardRepositoryInterface {
             {
                 foreach ($sales as $sale) {
                     $customers = $sale->customers()
-                    ->where("pipeline_id", $customer_pipeline->id)
-                    ->whereMonth("updated_at", $query_month);
+                    ->where("pipeline_id", $customer_pipeline->id);
                     $count = $customers->count();
                 }
             }
@@ -107,6 +106,8 @@ class DashboardRepository implements DashboardRepositoryInterface {
         {
             return auth()->user()
             ->customers
+            ->where("pipeline_id", "==", $customer_pipeline->id)
+            ->between_date($from_date, $to_date)
             ->count();
         }
     }
@@ -114,19 +115,16 @@ class DashboardRepository implements DashboardRepositoryInterface {
     public function get_sales_pipeline_total(Request $request) {
         $user = auth()->user();
         $role = UserRoleType::fromValue($user->role->name);
-        $query_month = $request->query("month") ?? Carbon::now()->month;
         $customer_pipeline = Pipeline::whereName(__("pipeline.customer"))->first();
+        $from_date = $request->date("from_date");
+        $to_date = $request->date("to_date");
         $count = 0;
 
         if ($role->is(UserRoleType::HeadSale) || $role->is(UserRoleType::SaleAdmin))
         {
-            if ($customer_pipeline) {
-                $customers = Customer::where("pipeline_id", "!=", $customer_pipeline->id)
-                ->whereMonth("updated_at", $query_month)
-                ->get();
-                $count = count($customers);
-            }
-            return $count;
+            return Customer::where("pipeline_id", "!=", $customer_pipeline->id)
+                ->whereBetween("updated_at", [$from_date, $to_date])
+                ->count();
         }
         else if ($role->is(UserRoleType::DSM))
         {
@@ -136,7 +134,7 @@ class DashboardRepository implements DashboardRepositoryInterface {
                 foreach ($sales as $sale) {
                     $customers = $sale->customers()
                     ->where("pipeline_id", "!=", $customer_pipeline->id)
-                    ->whereMonth("updated_at", $query_month)
+                    ->between_date($from_date, $to_date)
                     ->get();
                     $count = $customers->count();
                 }
@@ -147,6 +145,7 @@ class DashboardRepository implements DashboardRepositoryInterface {
         {
             return auth()->user()->customers
             ->where("pipeline_id", "!=", $customer_pipeline->id)
+            ->between_date($from_date, $to_date)
             ->count();
         }
     }
@@ -157,10 +156,13 @@ class DashboardRepository implements DashboardRepositoryInterface {
         $role = UserRoleType::fromValue($user->role->name);
         $pipeline = Pipeline::whereName(__("pipeline.customer"))->first();
         $response = [];
+        $from_date = $request->date("from_date");
+        $to_date = $request->date("to_date");
 
         if ($role->is(UserRoleType::HeadSale) || $role->is(UserRoleType::SaleAdmin))
         {
             return Customer::filterPipeline(__("pipeline.customer"))
+            ->whereBetween("updated_at", [$from_date, $to_date])
             ->groupBy("package_id")
             ->map(function ($customers, $id) {
                 $package = Package::find($id);
@@ -191,11 +193,13 @@ class DashboardRepository implements DashboardRepositoryInterface {
             return auth()->user()
             ->customers
             ->where("pipeline_id", $pipeline->id)
+            ->between_date($from_date, $to_date)
             ->groupBy("payment_term")
-            ->map(function ($customers, $term) {
+            ->map(function ($customers, $term) use($from_date, $to_date) {
                 return [
                     "data" => $term,
-                    "count" => $customers->count(),
+                    "count" => $customers
+                    ->count(),
                 ];
             })
             ->values();
@@ -206,34 +210,40 @@ class DashboardRepository implements DashboardRepositoryInterface {
     {
         $role = UserRoleType::fromValue(auth()->user()->role->name);
         $pipeline = Pipeline::whereName(__("pipeline.customer"))->first();
+        $from_date = $request->date("from_date");
+        $to_date = $request->date("to_date");
+
         if ($role->is(UserRoleType::HeadSale) || $role->is(UserRoleType::SaleAdmin))
         {
             return Customer::filterPipeline(__("pipeline.customer"))
+            ->whereBetween("updated_at", [$from_date, $to_date])
             ->groupBy("package_id")
-            ->map(function ($customers, $id) {
+            ->map(function ($customers, $id) use($from_date, $to_date) {
                 $package = Package::find($id);
                 return [
                     "data" => new SettingResource($package),
-                    "count" => $customers->count()
+                    "count" => $customers
+                    ->count()
                 ];
             })
             ->values();
         }
         else if ($role->is(UserRoleType::DSM))
         {
-
         }
         else if ($role->is(UserRoleType::Sale))
         {
             return auth()->user()
             ->customers
             ->where("pipeline_id", $pipeline->id)
+            ->between_date($from_date, $to_date)
             ->groupBy("package_id")
             ->map(function ($customers, $id) {
                 $package = Package::find($id);
                 return [
                     "data" => new SettingResource($package),
-                    "count" => $customers->count(),
+                    "count" => $customers
+                    ->count(),
                 ];
             })
             ->values();
@@ -244,6 +254,9 @@ class DashboardRepository implements DashboardRepositoryInterface {
     {
         $role = UserRoleType::fromValue(auth()->user()->role->name);
         $pipeline = Pipeline::whereName(__("pipeline.customer"))->first();
+        $from_date = $request->date("from_date");
+        $to_date = $request->date("to_date");
+
         if ($role->is(UserRoleType::HeadSale))
         {
 
@@ -253,12 +266,14 @@ class DashboardRepository implements DashboardRepositoryInterface {
             return auth()->user()
             ->customers
             ->where("pipeline_id", $pipeline->id)
+            ->between_date($from_date, $to_date)
             ->groupBy("territory_id")
             ->map(function ($customers, $id) {
                 $territory = Territory::find($id);
                 return [
                     "data" => new SettingResource($territory),
-                    "count" => $customers->count(),
+                    "count" => $customers
+                    ->count(),
                 ];
             })
             ->values();

@@ -1,5 +1,7 @@
 <?php
 
+use App\Providers\CollectionServiceProvider;
+
 return [
 
     /*
@@ -174,6 +176,11 @@ return [
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
         App\Providers\RepositoryServiceProvider::class,
+
+        /**
+         * Custom Service Providers...
+         */
+        App\Providers\CollectionServiceProvider::class
     ],
 
     /*
