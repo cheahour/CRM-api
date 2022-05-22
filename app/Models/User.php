@@ -132,7 +132,8 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
     public static function sales()
     {
         $sale_role = Role::whereName(__("user_role.sale"))->first();
-        return static::where("role_id", "=", $sale_role->id)
+        return static::with("customers")
+            ->where("role_id", "=", $sale_role->id)
             ->get();
     }
 

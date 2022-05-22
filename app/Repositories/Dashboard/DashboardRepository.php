@@ -14,8 +14,6 @@ use App\Repositories\Dashboard\DashboardRepositoryInterface;
 use Auth;
 use Illuminate\Http\Request;
 
-use function GuzzleHttp\Promise\each;
-
 class DashboardRepository implements DashboardRepositoryInterface {
     public function get_customers_pipeline_by_user(Request $request)
     {
@@ -26,10 +24,13 @@ class DashboardRepository implements DashboardRepositoryInterface {
         if ($role->is(UserRoleType::HeadSale) || $role->is(UserRoleType::SaleAdmin))
         {
             return User::sales()
-            ->map(function($dsm) {
+            ->map(function($sale) use($from_date, $to_date) {
                 return [
-                    "data" => new UserResource($dsm),
-                    "count" => $dsm->customers()->count(),
+                    "data" => new UserResource($sale),
+                    "count" => $sale
+                    ->customers()
+                    ->whereBetween("updated_at", [$from_date, $to_date])
+                    ->count()
                 ];
             });
         }
@@ -146,10 +147,28 @@ class DashboardRepository implements DashboardRepositoryInterface {
         }
         else if ($role->is(UserRoleType::DSM))
         {
-            return Auth::user()
+            $collection = collect();
+            $customers = Auth::user()
             ->sales()
             ->only_sales_from_dsm()
-            ->map(function ($sale) { return $sale->customers; })
+            ->values()
+            ->map(function($sale) use($from_date, $to_date) {
+                return $sale
+                ->customers
+                ->between_date($from_date, $to_date);
+            });
+            foreach($customers as $customer) {
+                $collection = $collection->merge($customer);
+            }
+            return $collection
+            ->groupBy("payment_term")
+            ->map(function ($customers, $term) {
+                return [
+                    "data" => $term,
+                    "count" => $customers
+                    ->count(),
+                ];
+            })
             ->values();
         }
         else if ($role->is(UserRoleType::Sale))
@@ -194,6 +213,30 @@ class DashboardRepository implements DashboardRepositoryInterface {
         }
         else if ($role->is(UserRoleType::DSM))
         {
+            $collection = collect();
+            $customers = Auth::user()
+            ->sales()
+            ->only_sales_from_dsm()
+            ->values()
+            ->map(function($sale) use($from_date, $to_date) {
+                return $sale
+                ->customers
+                ->between_date($from_date, $to_date);
+            });
+            foreach($customers as $customer) {
+                $collection = $collection->merge($customer);
+            }
+            return $collection
+            ->groupBy("package_id")
+            ->map(function ($customers, $id) {
+                $package = Package::find($id);
+                return [
+                    "data" => new SettingResource($package),
+                    "count" => $customers
+                    ->count(),
+                ];
+            })
+            ->values();
         }
         else if ($role->is(UserRoleType::Sale))
         {
@@ -221,7 +264,7 @@ class DashboardRepository implements DashboardRepositoryInterface {
         $from_date = $request->date("from_date");
         $to_date = $request->date("to_date");
 
-        if ($role->is(UserRoleType::HeadSale))
+        if ($role->is(UserRoleType::HeadSale) || $role->is(UserRoleType::SaleAdmin))
         {
             return Customer::filterPipeline(__("pipeline.customer"))
             ->whereBetween("updated_at", [$from_date, $to_date])
@@ -232,6 +275,33 @@ class DashboardRepository implements DashboardRepositoryInterface {
                     "data" => new SettingResource($territory),
                     "count" => $customers
                     ->count()
+                ];
+            })
+            ->values();
+        }
+        else if ($role->is(UserRoleType::DSM))
+        {
+            $collection = collect();
+            $customers = Auth::user()
+            ->sales()
+            ->only_sales_from_dsm()
+            ->values()
+            ->map(function($sale) use($from_date, $to_date) {
+                return $sale
+                ->customers
+                ->between_date($from_date, $to_date);
+            });
+            foreach($customers as $customer) {
+                $collection = $collection->merge($customer);
+            }
+            return $collection
+            ->groupBy("territory_id")
+            ->map(function ($customers, $id) {
+                $territory = Territory::find($id);
+                return [
+                    "data" => new SettingResource($territory),
+                    "count" => $customers
+                    ->count(),
                 ];
             })
             ->values();

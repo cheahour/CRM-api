@@ -22,14 +22,14 @@ class APIDashboardController extends APIBaseController
         {
             $customers_total = $this->repository->get_customers_total($request);
             $sales_pipeline_total = $this->repository->get_sales_pipeline_total($request);
-            $customers_pipeline = $this->repository->get_customers_pipeline_by_user($request);
+            $sales = $this->repository->get_customers_pipeline_by_user($request);
             $payment_terms = $this->repository->get_sale_payment_terms($request);
             $packages = $this->repository->get_sale_packages($request);
             $territories = $this->repository->get_sale_territories($request);
             $response = [
                 "customers_total" => $customers_total,
                 "sales_pipeline_total" => $sales_pipeline_total,
-                "customers_pipeline" => $customers_pipeline,
+                "sales" => $sales,
                 "payment_terms" => $payment_terms,
                 "packages" => $packages,
                 "territories" => $territories
@@ -43,12 +43,14 @@ class APIDashboardController extends APIBaseController
             $customers_pipeline = $this->repository->get_customers_pipeline_by_user($request);
             $payment_terms = $this->repository->get_sale_payment_terms($request);
             $packages = $this->repository->get_sale_packages($request);
+            $territories = $this->repository->get_sale_territories($request);
             $response = [
                 "customers_total" => $customers_total,
                 "sales_pipeline_total" => $sales_pipeline_total,
                 "customers_pipeline" => $customers_pipeline,
                 "payment_terms" => $payment_terms,
                 "packages" => $packages,
+                "territories" => $territories,
             ];
             return $this->send_response($response);
         }
