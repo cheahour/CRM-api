@@ -49,4 +49,5 @@ Route::middleware('auth:sanctum')->group(function () {
 
 Route::middleware('auth:sanctum')->group(function () {
     Route::get("dashboard/summary", [APIDashboardController::class, "dashboard_summary"]);
+    Route::get("dashboard/export", [APIDashboardController::class, "export_excel_report"]);
 });

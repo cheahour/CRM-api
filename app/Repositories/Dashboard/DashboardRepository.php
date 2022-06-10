@@ -3,6 +3,7 @@
 namespace App\Repositories\Dashboard;
 
 use App\Enums\UserRoleType;
+use App\Exports\SalesExport;
 use App\Http\Resources\Setting\SettingResource;
 use App\Http\Resources\User\UserResource;
 use App\Models\Customer;
@@ -13,114 +14,106 @@ use App\Models\User;
 use App\Repositories\Dashboard\DashboardRepositoryInterface;
 use Auth;
 use Illuminate\Http\Request;
+use Maatwebsite\Excel\Facades\Excel;
 
-class DashboardRepository implements DashboardRepositoryInterface {
+class DashboardRepository implements DashboardRepositoryInterface
+{
+
     public function get_customers_pipeline_by_user(Request $request)
     {
         $role = UserRoleType::fromValue(auth()->user()->role->name);
         $from_date = $request->date("from_date");
         $to_date = $request->date("to_date");
 
-        if ($role->is(UserRoleType::HeadSale) || $role->is(UserRoleType::SaleAdmin))
-        {
+        if ($role->is(UserRoleType::HeadSale) || $role->is(UserRoleType::SaleAdmin)) {
             return User::sales()
-            ->map(function($sale) use($from_date, $to_date) {
-                return [
-                    "data" => new UserResource($sale),
-                    "count" => $sale
-                    ->customers()
-                    ->whereBetween("updated_at", [$from_date, $to_date])
-                    ->count()
-                ];
-            });
-        }
-        else if ($role->is(UserRoleType::DSM))
-        {
+                ->map(function ($sale) use ($from_date, $to_date) {
+                    return [
+                        "data" => new UserResource($sale),
+                        "count" => $sale
+                            ->customers()
+                            ->whereBetween("updated_at", [$from_date, $to_date])
+                            ->count()
+                    ];
+                });
+        } else if ($role->is(UserRoleType::DSM)) {
             return Auth::user()
-            ->sales()
-            ->only_sales_from_dsm()
-            ->values()
-            ->map(function($sale) use($from_date, $to_date) {
-                $count = $sale
-                ->customers
-                ->between_date($from_date, $to_date)
-                ->count();
-                return [
-                    "data" => new UserResource($sale),
-                    "count" => $count
-                ];
-            });
+                ->sales()
+                ->only_sales_from_dsm()
+                ->values()
+                ->map(function ($sale) use ($from_date, $to_date) {
+                    $count = $sale
+                        ->customers
+                        ->between_date($from_date, $to_date)
+                        ->count();
+                    return [
+                        "data" => new UserResource($sale),
+                        "count" => $count
+                    ];
+                });
         }
     }
 
-    public function get_customers_total(Request $request) {
+    public function get_customers_total(Request $request)
+    {
         $role = UserRoleType::fromValue(auth()->user()->role->name);
         $customer_pipeline = Pipeline::whereName(__("pipeline.customer"))->first();
         $from_date = $request->date("from_date");
         $to_date = $request->date("to_date");
-        if ($role->is(UserRoleType::HeadSale) || $role->is(UserRoleType::SaleAdmin))
-        {
+        if ($role->is(UserRoleType::HeadSale) || $role->is(UserRoleType::SaleAdmin)) {
             return Customer::filterPipeline(__("pipeline.customer"))
-            ->whereBetween("updated_at", [$from_date, $to_date])
-            ->count();
-        }
-        else if ($role->is(UserRoleType::DSM))
-        {
+                ->whereBetween("updated_at", [$from_date, $to_date])
+                ->count();
+        } else if ($role->is(UserRoleType::DSM)) {
             return Auth::user()
-            ->sales()
-            ->only_sales_from_dsm()
-            ->map(function($sale) use($customer_pipeline, $from_date, $to_date) {
-                return $sale
+                ->sales()
+                ->only_sales_from_dsm()
+                ->map(function ($sale) use ($customer_pipeline, $from_date, $to_date) {
+                    return $sale
+                        ->customers
+                        ->where("pipeline_id", "==", $customer_pipeline->id)
+                        ->between_date($from_date, $to_date)
+                        ->count();
+                })
+                ->sum();
+        } else if ($role->is(UserRoleType::Sale)) {
+            return auth()->user()
                 ->customers
                 ->where("pipeline_id", "==", $customer_pipeline->id)
                 ->between_date($from_date, $to_date)
                 ->count();
-            })
-            ->sum();
-        }
-        else if ($role->is(UserRoleType::Sale))
-        {
-            return auth()->user()
-            ->customers
-            ->where("pipeline_id", "==", $customer_pipeline->id)
-            ->between_date($from_date, $to_date)
-            ->count();
         }
     }
 
-    public function get_sales_pipeline_total(Request $request) {
+    public function get_sales_pipeline_total(Request $request)
+    {
         $user = auth()->user();
         $role = UserRoleType::fromValue($user->role->name);
         $customer_pipeline = Pipeline::whereName(__("pipeline.customer"))->first();
         $from_date = $request->date("from_date");
         $to_date = $request->date("to_date");
 
-        if ($role->is(UserRoleType::HeadSale) || $role->is(UserRoleType::SaleAdmin))
-        {
+        if ($role->is(UserRoleType::HeadSale) || $role->is(UserRoleType::SaleAdmin)) {
             return Customer::where("pipeline_id", "!=", $customer_pipeline->id)
                 ->whereBetween("updated_at", [$from_date, $to_date])
                 ->count();
-        }
-        else if ($role->is(UserRoleType::DSM))
-        {
+        } else if ($role->is(UserRoleType::DSM)) {
             return Auth::user()
-            ->sales()
-            ->only_sales_from_dsm()
-            ->map(function($sale) use($customer_pipeline, $from_date, $to_date) {
-                return $sale
-                ->customers
+                ->sales()
+                ->only_sales_from_dsm()
+                ->map(function ($sale) use ($customer_pipeline, $from_date, $to_date) {
+                    return $sale
+                        ->customers
+                        ->where("pipeline_id", "!=", $customer_pipeline->id)
+                        ->between_date($from_date, $to_date)
+                        ->count();
+                })
+                ->sum();
+        } else if ($role->is(UserRoleType::Sale)) {
+            return auth()->user()->customers
                 ->where("pipeline_id", "!=", $customer_pipeline->id)
                 ->between_date($from_date, $to_date)
                 ->count();
-            })
-            ->sum();
-        }
-        else if ($role->is(UserRoleType::Sale))
-        {
-            return auth()->user()->customers
-            ->where("pipeline_id", "!=", $customer_pipeline->id)
-            ->between_date($from_date, $to_date)
-            ->count();
         }
     }
 
@@ -132,60 +125,55 @@ class DashboardRepository implements DashboardRepositoryInterface {
         $from_date = $request->date("from_date");
         $to_date = $request->date("to_date");
 
-        if ($role->is(UserRoleType::HeadSale) || $role->is(UserRoleType::SaleAdmin))
-        {
+        if ($role->is(UserRoleType::HeadSale) || $role->is(UserRoleType::SaleAdmin)) {
             return Customer::filterPipeline(__("pipeline.customer"))
-            ->whereBetween("updated_at", [$from_date, $to_date])
-            ->groupBy("payment_term")
-            ->map(function ($customers, $term) {
-                return [
-                    "data" => $term,
-                    "count" => $customers->count()
-                ];
-            })
-            ->values();
-        }
-        else if ($role->is(UserRoleType::DSM))
-        {
+                ->whereBetween("updated_at", [$from_date, $to_date])
+                ->groupBy("payment_term")
+                ->map(function ($customers, $term) {
+                    return [
+                        "data" => $term,
+                        "count" => $customers->count()
+                    ];
+                })
+                ->values();
+        } else if ($role->is(UserRoleType::DSM)) {
             $collection = collect();
             $customers = Auth::user()
-            ->sales()
-            ->only_sales_from_dsm()
-            ->values()
-            ->map(function($sale) use($from_date, $to_date) {
-                return $sale
-                ->customers
-                ->between_date($from_date, $to_date);
-            });
-            foreach($customers as $customer) {
+                ->sales()
+                ->only_sales_from_dsm()
+                ->values()
+                ->map(function ($sale) use ($from_date, $to_date) {
+                    return $sale
+                        ->customers
+                        ->between_date($from_date, $to_date);
+                });
+            foreach ($customers as $customer) {
                 $collection = $collection->merge($customer);
             }
             return $collection
-            ->groupBy("payment_term")
-            ->map(function ($customers, $term) {
-                return [
-                    "data" => $term,
-                    "count" => $customers
-                    ->count(),
-                ];
-            })
-            ->values();
-        }
-        else if ($role->is(UserRoleType::Sale))
-        {
+                ->groupBy("payment_term")
+                ->map(function ($customers, $term) {
+                    return [
+                        "data" => $term,
+                        "count" => $customers
+                            ->count(),
+                    ];
+                })
+                ->values();
+        } else if ($role->is(UserRoleType::Sale)) {
             return auth()->user()
-            ->customers
-            ->where("pipeline_id", $pipeline->id)
-            ->between_date($from_date, $to_date)
-            ->groupBy("payment_term")
-            ->map(function ($customers, $term) {
-                return [
-                    "data" => $term,
-                    "count" => $customers
-                    ->count(),
-                ];
-            })
-            ->values();
+                ->customers
+                ->where("pipeline_id", $pipeline->id)
+                ->between_date($from_date, $to_date)
+                ->groupBy("payment_term")
+                ->map(function ($customers, $term) {
+                    return [
+                        "data" => $term,
+                        "count" => $customers
+                            ->count(),
+                    ];
+                })
+                ->values();
         }
     }
 
@@ -196,64 +184,59 @@ class DashboardRepository implements DashboardRepositoryInterface {
         $from_date = $request->date("from_date");
         $to_date = $request->date("to_date");
 
-        if ($role->is(UserRoleType::HeadSale) || $role->is(UserRoleType::SaleAdmin))
-        {
+        if ($role->is(UserRoleType::HeadSale) || $role->is(UserRoleType::SaleAdmin)) {
             return Customer::filterPipeline(__("pipeline.customer"))
-            ->whereBetween("updated_at", [$from_date, $to_date])
-            ->groupBy("package_id")
-            ->map(function ($customers, $id) use($from_date, $to_date) {
-                $package = Package::find($id);
-                return [
-                    "data" => new SettingResource($package),
-                    "count" => $customers
-                    ->count()
-                ];
-            })
-            ->values();
-        }
-        else if ($role->is(UserRoleType::DSM))
-        {
+                ->whereBetween("updated_at", [$from_date, $to_date])
+                ->groupBy("package_id")
+                ->map(function ($customers, $id) use ($from_date, $to_date) {
+                    $package = Package::find($id);
+                    return [
+                        "data" => new SettingResource($package),
+                        "count" => $customers
+                            ->count()
+                    ];
+                })
+                ->values();
+        } else if ($role->is(UserRoleType::DSM)) {
             $collection = collect();
             $customers = Auth::user()
-            ->sales()
-            ->only_sales_from_dsm()
-            ->values()
-            ->map(function($sale) use($from_date, $to_date) {
-                return $sale
-                ->customers
-                ->between_date($from_date, $to_date);
-            });
-            foreach($customers as $customer) {
+                ->sales()
+                ->only_sales_from_dsm()
+                ->values()
+                ->map(function ($sale) use ($from_date, $to_date) {
+                    return $sale
+                        ->customers
+                        ->between_date($from_date, $to_date);
+                });
+            foreach ($customers as $customer) {
                 $collection = $collection->merge($customer);
             }
             return $collection
-            ->groupBy("package_id")
-            ->map(function ($customers, $id) {
-                $package = Package::find($id);
-                return [
-                    "data" => new SettingResource($package),
-                    "count" => $customers
-                    ->count(),
-                ];
-            })
-            ->values();
-        }
-        else if ($role->is(UserRoleType::Sale))
-        {
+                ->groupBy("package_id")
+                ->map(function ($customers, $id) {
+                    $package = Package::find($id);
+                    return [
+                        "data" => new SettingResource($package),
+                        "count" => $customers
+                            ->count(),
+                    ];
+                })
+                ->values();
+        } else if ($role->is(UserRoleType::Sale)) {
             return auth()->user()
-            ->customers
-            ->where("pipeline_id", $pipeline->id)
-            ->between_date($from_date, $to_date)
-            ->groupBy("package_id")
-            ->map(function ($customers, $id) {
-                $package = Package::find($id);
-                return [
-                    "data" => new SettingResource($package),
-                    "count" => $customers
-                    ->count(),
-                ];
-            })
-            ->values();
+                ->customers
+                ->where("pipeline_id", $pipeline->id)
+                ->between_date($from_date, $to_date)
+                ->groupBy("package_id")
+                ->map(function ($customers, $id) {
+                    $package = Package::find($id);
+                    return [
+                        "data" => new SettingResource($package),
+                        "count" => $customers
+                            ->count(),
+                    ];
+                })
+                ->values();
         }
     }
 
@@ -264,64 +247,72 @@ class DashboardRepository implements DashboardRepositoryInterface {
         $from_date = $request->date("from_date");
         $to_date = $request->date("to_date");
 
-        if ($role->is(UserRoleType::HeadSale) || $role->is(UserRoleType::SaleAdmin))
-        {
+        if ($role->is(UserRoleType::HeadSale) || $role->is(UserRoleType::SaleAdmin)) {
             return Customer::filterPipeline(__("pipeline.customer"))
-            ->whereBetween("updated_at", [$from_date, $to_date])
-            ->groupBy("territory_id")
-            ->map(function ($customers, $id) {
-                $territory = Territory::find($id);
-                return [
-                    "data" => new SettingResource($territory),
-                    "count" => $customers
-                    ->count()
-                ];
-            })
-            ->values();
-        }
-        else if ($role->is(UserRoleType::DSM))
-        {
+                ->whereBetween("updated_at", [$from_date, $to_date])
+                ->groupBy("territory_id")
+                ->map(function ($customers, $id) {
+                    $territory = Territory::find($id);
+                    return [
+                        "data" => new SettingResource($territory),
+                        "count" => $customers
+                            ->count()
+                    ];
+                })
+                ->values();
+        } else if ($role->is(UserRoleType::DSM)) {
             $collection = collect();
             $customers = Auth::user()
-            ->sales()
-            ->only_sales_from_dsm()
-            ->values()
-            ->map(function($sale) use($from_date, $to_date) {
-                return $sale
-                ->customers
-                ->between_date($from_date, $to_date);
-            });
-            foreach($customers as $customer) {
+                ->sales()
+                ->only_sales_from_dsm()
+                ->values()
+                ->map(function ($sale) use ($from_date, $to_date) {
+                    return $sale
+                        ->customers
+                        ->between_date($from_date, $to_date);
+                });
+            foreach ($customers as $customer) {
                 $collection = $collection->merge($customer);
             }
             return $collection
-            ->groupBy("territory_id")
-            ->map(function ($customers, $id) {
-                $territory = Territory::find($id);
-                return [
-                    "data" => new SettingResource($territory),
-                    "count" => $customers
-                    ->count(),
-                ];
-            })
-            ->values();
-        }
-        else if ($role->is(UserRoleType::Sale))
-        {
+                ->groupBy("territory_id")
+                ->map(function ($customers, $id) {
+                    $territory = Territory::find($id);
+                    return [
+                        "data" => new SettingResource($territory),
+                        "count" => $customers
+                            ->count(),
+                    ];
+                })
+                ->values();
+        } else if ($role->is(UserRoleType::Sale)) {
             return auth()->user()
-            ->customers
-            ->where("pipeline_id", $pipeline->id)
-            ->between_date($from_date, $to_date)
-            ->groupBy("territory_id")
-            ->map(function ($customers, $id) {
-                $territory = Territory::find($id);
-                return [
-                    "data" => new SettingResource($territory),
-                    "count" => $customers
-                    ->count(),
-                ];
-            })
-            ->values();
+                ->customers
+                ->where("pipeline_id", $pipeline->id)
+                ->between_date($from_date, $to_date)
+                ->groupBy("territory_id")
+                ->map(function ($customers, $id) {
+                    $territory = Territory::find($id);
+                    return [
+                        "data" => new SettingResource($territory),
+                        "count" => $customers
+                            ->count(),
+                    ];
+                })
+                ->values();
         }
+    }
+
+    public function export_excel_report(Request $request)
+    {
+        $from_date = $request->date("from_date");
+        $to_date = $request->date("to_date");
+        return Excel::download(
+            new SalesExport(
+                $from_date,
+                $to_date
+            ),
+            "sales_pipeline_report.xlsx"
+        );
     }
 }

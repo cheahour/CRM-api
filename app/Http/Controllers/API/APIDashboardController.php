@@ -71,4 +71,9 @@ class APIDashboardController extends APIBaseController
             return $this->send_response($response);
         }
     }
+
+    public function export_excel_report(Request $request)
+    {
+        return $this->repository->export_excel_report($request);
+    }
 }

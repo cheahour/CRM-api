@@ -19,7 +19,8 @@ class KPIActivity extends Model
         'score',
     ];
 
-    public function customer() {
+    public function customers()
+    {
         return $this->hasMany(Customer::class);
     }
 }

@@ -16,7 +16,13 @@ use Str;
 
 class User extends Model implements AuthenticatableContract, AuthorizableContract
 {
-    use HasFactory, Notifiable, HasApiTokens, Authenticatable, Authorizable, Uuids, SoftDeletes;
+    use HasFactory,
+        Notifiable,
+        HasApiTokens,
+        Authenticatable,
+        Authorizable,
+        Uuids,
+        SoftDeletes;
 
     /**
      * The attributes that are mass assignable.
@@ -57,61 +63,9 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
         return $this->belongsTo(Role::class);
     }
 
-    public function customers() {
+    public function customers()
+    {
         return $this->hasMany(Customer::class);
-    }
-
-    /**
-     * Write code on Method
-     *
-     * @return response()
-     */
-    public static function boot() {
-        parent::boot();
-        /**
-         * Write code on Method
-         *
-         * @return response()
-         */
-        static::creating(function($model) {
-            $model->id = Str::uuid();
-        });
-
-        /**
-         * Write code on Method
-         *
-         * @return response()
-         */
-        static::created(function($item) {
-
-        });
-
-        /**
-         * Write code on Method
-         *
-         * @return response()
-         */
-        static::updating(function($item) {
-
-        });
-
-        /**
-         * Write code on Method
-         *
-         * @return response()
-         */
-        static::updated(function($item) {
-
-        });
-
-        /**
-         * Write code on Method
-         *
-         * @return response()
-         */
-        static::deleted(function($item) {
-
-        });
     }
 
     public static function default_dsm()
@@ -137,7 +91,8 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
             ->get();
     }
 
-    public static function sales_based_on_dsm(String $id) {
+    public static function sales_based_on_dsm(String $id)
+    {
         $sale_role = Role::whereName(__("user_role.sale"))->first();
         return static::where('user_id', '=', $id)
             ->where("role_id", "=", $sale_role->id)

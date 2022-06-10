@@ -84,20 +84,20 @@ class Customer extends Model
         $dsms = User::dsms();
         $sales = User::sales();
         $customers_count = static::all()
-        ->groupBy("user_id");
+            ->groupBy("user_id");
         return $customers_count;
     }
 
     public static function get_customers_count_every_sales()
     {
         return static::all()
-        ->groupBy("user_id");
+            ->groupBy("user_id");
     }
 
     public static function filterPipeline(String $name)
     {
         $pipeline = Pipeline::whereName($name)->first();
         return static::all()
-        ->where("pipeline_id", $pipeline->id);
+            ->where("pipeline_id", $pipeline->id);
     }
 }
