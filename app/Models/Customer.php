@@ -17,7 +17,7 @@ class Customer extends Model
      * @var array
      */
     protected $fillable = [
-        // "id",
+        "id",
         "name",
         "email",
         "phone_number",
@@ -33,16 +33,10 @@ class Customer extends Model
         "billing_date",
         "next_follow_up_date",
         "remark",
-        "user_id"
+        "user_id",
+        "existing_bandwidth",
+        "existing_price"
     ];
-
-    public static function boot()
-    {
-        parent::boot();
-        static::creating(function ($model) {
-            $model->id = Str::uuid();
-        });
-    }
 
     public function user()
     {
@@ -77,6 +71,11 @@ class Customer extends Model
     public function package()
     {
         return $this->belongsTo(Package::class);
+    }
+
+    public function existing_provider()
+    {
+        return $this->belongsTo(ExistingProvider::class);
     }
 
     public static function get_customers_count_every_dsms()

@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\API\APICustomerController;
 use App\Http\Controllers\API\APIDashboardController;
+use App\Http\Controllers\API\APIExistingProviderController;
 use App\Http\Controllers\API\AuthController;
 use App\Http\Controllers\API\APIRoleController;
 use App\Http\Controllers\API\APIUserController;
@@ -23,7 +24,7 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::post("login",[AuthController::class,'login']);
+Route::post("login", [AuthController::class, 'login']);
 Route::post("sales/login", [AuthController::class, "login_as_sale"]);
 Route::middleware('auth:sanctum')->group(function () {
     Route::get("profile", [APIUserController::class, "get_profile"]);
@@ -40,6 +41,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::apiResource('territories', APITerritoryController::class);
     Route::apiResource('kpi-activities', APIKPIActivityController::class);
     Route::apiResource('pipelines', APIPipelineController::class);
+    Route::apiResource("existing-providers", APIExistingProviderController::class);
 });
 
 Route::middleware('auth:sanctum')->group(function () {

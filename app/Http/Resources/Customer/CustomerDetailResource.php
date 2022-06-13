@@ -38,6 +38,7 @@ class CustomerDetailResource extends JsonResource
             "kpi_activity" => new KpiActivityResource($this->kpi_activity),
             "pipeline" => new SettingResource($this->pipeline),
             "package" => new SettingResource($this->package),
+            "existing_provider" => new SettingResource($this->existing_provider)
         ];
     }
 }

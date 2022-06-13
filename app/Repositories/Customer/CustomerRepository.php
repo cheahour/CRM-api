@@ -2,49 +2,60 @@
 
 namespace App\Repositories\Customer;
 
+use App\Enums\UserRoleType;
 use App\Models\Customer;
+use App\Models\ExistingProvider;
 use App\Models\Industry;
 use App\Models\KpiActivity;
 use App\Models\Package;
 use App\Models\Pipeline;
 use App\Models\Territory;
 use App\Repositories\Customer\CustomerRepositoryInterface;
+use Auth;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 
-class CustomerRepository implements CustomerRepositoryInterface {
-    public function get_sales_pipeline(Request $request) {
+class CustomerRepository implements CustomerRepositoryInterface
+{
+    private UserRoleType $role;
+
+    public function get_sales_pipeline(Request $request)
+    {
+        $this->role = UserRoleType::fromValue(auth()->user()->role->name);
         $limit = $request->query("limit");
-        $show_all_customers = $request->query("show_all_sales_pipeline");
         $customer_pipeline = Pipeline::whereName(__("pipeline.customer"))->first();
         if ($customer_pipeline) {
-            if ($show_all_customers == "true") {
+            if ($this->role->is(UserRoleType::Sale)) {
+                return Auth::user()
+                    ->customers()
+                    ->orderBy("name")
+                    ->where("pipeline_id", "!=", $customer_pipeline->id)
+                    ->paginate($limit);
+            } else {
                 return Customer::orderBy("name")
                     ->where("pipeline_id", "!=", $customer_pipeline->id)
                     ->paginate($limit);
             }
-            return Customer::orderBy("name")
-                ->where("user_id", auth()->user()->id)
-                ->where("pipeline_id", "!=", $customer_pipeline->id)
-                ->paginate($limit);
         }
     }
 
     public function get_customers(Request $request)
     {
+        $this->role = UserRoleType::fromValue(auth()->user()->role->name);
         $limit = $request->query("limit");
-        $show_all_customers = $request->query("show_all_customers");
         $customer_pipeline = Pipeline::whereName(__("pipeline.customer"))->first();
         if ($customer_pipeline) {
-            if ($show_all_customers == "true") {
+            if ($this->role->is(UserRoleType::Sale)) {
+                return Auth::user()
+                    ->customers()
+                    ->orderBy("name")
+                    ->where("pipeline_id", $customer_pipeline->id)
+                    ->paginate($limit);
+            } else {
                 return Customer::orderBy("name")
                     ->where("pipeline_id", "=", $customer_pipeline->id)
                     ->paginate($limit);
             }
-            return Customer::orderBy("name")
-                ->where("user_id", auth()->user()->id)
-                ->where("pipeline_id", "=", $customer_pipeline->id)
-                ->paginate($limit);
         }
     }
 
@@ -55,6 +66,7 @@ class CustomerRepository implements CustomerRepositoryInterface {
         $kpi_activity = KpiActivity::find($request->get("kpi_activity_id"));
         $pipeline = Pipeline::find($request->get("pipeline_id"));
         $package = Package::find($request->get("package_id"));
+        $existing_provider = ExistingProvider::find($request->get("existing_id"));
         $customer = new Customer([
             "id" => Str::uuid(),
             "name" => $request->get("name"),
@@ -74,6 +86,8 @@ class CustomerRepository implements CustomerRepositoryInterface {
             "next_follow_up_date" => $request->get("next_follow_up_date"),
             "remark" => $request->get("remark"),
             "user_id" => auth()->user()->id,
+            "existing_bandwidth" => $request->get("existing_bandwidth"),
+            "existing_price" => $request->get("existing_price")
         ]);
         if ($territory) {
             $customer->territory()->associate($territory);
@@ -90,6 +104,9 @@ class CustomerRepository implements CustomerRepositoryInterface {
         if ($package) {
             $customer->package()->associate($package);
         }
+        if ($existing_provider) {
+            $customer->existing_provider()->associate($existing_provider);
+        }
         $customer->save();
         return $customer;
     }
@@ -102,6 +119,7 @@ class CustomerRepository implements CustomerRepositoryInterface {
         $kpi_activity = KpiActivity::find($request->get("kpi_activity_id"));
         $pipeline = Pipeline::find($request->get("pipeline_id"));
         $package = Package::find($request->get("package_id"));
+        $existing_provider = ExistingProvider::find($request->get("existing_id"));
         if ($customer) {
             $customer->update($request->all());
             if ($territory) {
@@ -118,6 +136,9 @@ class CustomerRepository implements CustomerRepositoryInterface {
             }
             if ($package) {
                 $customer->package()->associate($package)->save();
+            }
+            if ($existing_provider) {
+                $customer->existing_provider()->associate($existing_provider)->save();
             }
             return $customer;
         }

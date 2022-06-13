@@ -18,8 +18,7 @@ class APIDashboardController extends APIBaseController
     public function dashboard_summary(Request $request)
     {
         $role = UserRoleType::fromValue(auth()->user()->role->name);
-        if ($role->is(UserRoleType::HeadSale))
-        {
+        if ($role->is(UserRoleType::HeadSale)) {
             $customers_total = $this->repository->get_customers_total($request);
             $sales_pipeline_total = $this->repository->get_sales_pipeline_total($request);
             $sales = $this->repository->get_customers_pipeline_by_user($request);
@@ -35,9 +34,7 @@ class APIDashboardController extends APIBaseController
                 "territories" => $territories
             ];
             return $this->send_response($response);
-        }
-        else if ($role->is(UserRoleType::DSM))
-        {
+        } else if ($role->is(UserRoleType::DSM)) {
             $customers_total = $this->repository->get_customers_total($request);
             $sales_pipeline_total = $this->repository->get_sales_pipeline_total($request);
             $customers_pipeline = $this->repository->get_customers_pipeline_by_user($request);
@@ -53,9 +50,7 @@ class APIDashboardController extends APIBaseController
                 "territories" => $territories,
             ];
             return $this->send_response($response);
-        }
-        else if ($role->is(UserRoleType::Sale))
-        {
+        } else if ($role->is(UserRoleType::Sale)) {
             $customers_total = $this->repository->get_customers_total($request);
             $sales_pipeline_total = $this->repository->get_sales_pipeline_total($request);
             $payment_terms = $this->repository->get_sale_payment_terms($request);

@@ -113,6 +113,5 @@ class APICustomerController extends APIBaseController
      */
     public function destroy($id)
     {
-
     }
 }
