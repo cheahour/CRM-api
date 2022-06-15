@@ -17,7 +17,7 @@ class Customer extends Model
      * @var array
      */
     protected $fillable = [
-        "id",
+        // "id",
         "name",
         "email",
         "phone_number",
@@ -37,6 +37,14 @@ class Customer extends Model
         "existing_bandwidth",
         "existing_price"
     ];
+
+    public static function boot()
+    {
+        parent::boot();
+        static::creating(function ($model) {
+            $model->id = Str::uuid();
+        });
+    }
 
     public function user()
     {
