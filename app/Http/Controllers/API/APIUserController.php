@@ -54,7 +54,7 @@ class APIUserController extends APIBaseController
         return $this->send_error(__("custom_error.something_went_wrong"), 500);
     }
 
-    public function delete_user($id, Request $request)
+    public function delete_user(Request $request)
     {
         $validator = Validator::make($request->all(), [
             'delete_user_id' => 'required',
