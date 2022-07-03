@@ -28,6 +28,7 @@ class DashboardRepository implements DashboardRepositoryInterface
         if ($role->is(UserRoleType::HeadSale) || $role->is(UserRoleType::SaleAdmin)) {
             return User::sales()
                 ->map(function ($sale) use ($from_date, $to_date) {
+                    // dd($sale->customers());
                     return [
                         "data" => new UserResource($sale),
                         "count" => $sale

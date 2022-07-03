@@ -2,13 +2,15 @@
 
 namespace App\Repositories\User;
 
+use App\Enums\UserRoleType;
 use App\Repositories\User\UserRepositoryInterface;
 use App\Http\Resources\User\UserResource;
 use App\Models\Role;
 use App\Models\User;
 use Illuminate\Http\Request;
 
-class UserRepository implements UserRepositoryInterface {
+class UserRepository implements UserRepositoryInterface
+{
     public function get_account()
     {
         $user = auth()->user();
@@ -60,9 +62,9 @@ class UserRepository implements UserRepositoryInterface {
                 return $sales;
             }
             $sales = User::where("role_id", "=", $role->id)
-                    ->orderBy("name")
-                    ->with("role")
-                    ->paginate($limit);
+                ->orderBy("name")
+                ->with("role")
+                ->paginate($limit);
             return $sales;
         }
         return [];
@@ -97,22 +99,31 @@ class UserRepository implements UserRepositoryInterface {
         return null;
     }
 
-    public function delete_user($id)
+    public function delete_user($request)
     {
-        $default_dsm = User::default_dsm();
-        $sales = User::sales_based_on_dsm($id);
-        if ($default_dsm) {
-            $dsm = User::find($id);
-            if (count($sales) > 0) {
-                if (!$dsm->is_default) {
-                    foreach ($sales as $sale) {
-                        $sale->user_id = $default_dsm->id;
-                    }
-                }
+        $delete_user = User::find($request->get("delete_user_id"));
+        $inherited_user = User::find($request->get("user_id"));
+        if ($delete_user && $inherited_user) {
+            $role = UserRoleType::fromValue($delete_user->role->name);
+            if ($role->is(UserRoleType::DSM)) {
+                $delete_user
+                    ->sales()
+                    ->each(function ($sale) use ($delete_user, $inherited_user) {
+                        if ($sale->user_id == $delete_user->id) {
+                            $sale->update(["user_id" => $inherited_user->id]);
+                        }
+                    });
+                $delete_user
+                    ->delete();
+                return true;
+            } else if ($role->is(UserRoleType::Sale)) {
+                $delete_user
+                    ->customers()
+                    ->update(["user_id" => $inherited_user->id]);
+                $delete_user
+                    ->delete();
+                return true;
             }
-            $dsm->delete();
-            return $sales;
         }
-        return false;
     }
 }
