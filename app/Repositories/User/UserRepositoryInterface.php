@@ -13,4 +13,5 @@ interface UserRepositoryInterface
     public function create_user(Request $request);
     public function update_user(Request $request, $id);
     public function delete_user(Request $request);
+    public function delete_sale_admin($id);
 }

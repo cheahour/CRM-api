@@ -126,4 +126,13 @@ class UserRepository implements UserRepositoryInterface
             }
         }
     }
+
+    public function delete_sale_admin($id)
+    {
+        $user = User::find($id);
+        if ($user) {
+            $user->delete();
+            return true;
+        }
+    }
 }

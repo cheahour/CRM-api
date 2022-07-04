@@ -76,6 +76,15 @@ class APIUserController extends APIBaseController
         );
     }
 
+    function delete_sale_admin($id)
+    {
+        $delete = $this->repository->delete_sale_admin($id);
+        if ($delete) {
+            return $this->send_response($delete);
+        }
+        return $this->send_error(__("custom_error.something_went_wrong"), 500);
+    }
+
     function get_profile()
     {
         $user = $this->repository->get_account();

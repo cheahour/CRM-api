@@ -51,7 +51,14 @@ class APICustomerController extends APIBaseController
             "pipeline_id" => "required",
             "territory_id" => "required",
             "package_id" => "required",
+            "kpi_activity_id" => "required",
             "remark" => "required",
+        ], [
+            "name.required" => "Name is required",
+            "territory_id.required" => "Territory is required",
+            "pipeline_id.required" => "Pipeline is required",
+            "package_id.required" => "Package is required",
+            "remark.required" => "Remark is required"
         ]);
         if ($validator->fails()) {
             return $this->send_error($validator->errors()->first(), 422);
@@ -94,6 +101,12 @@ class APICustomerController extends APIBaseController
             "pipeline_id" => "required",
             "package_id" => "required",
             "remark" => "required",
+        ], [
+            "name.required" => "Name is required",
+            "territory_id.required" => "Territory is required",
+            "pipeline_id.required" => "Pipeline is required",
+            "package_id.required" => "Package is required",
+            "remark.required" => "Remark is required"
         ]);
         if ($validator->fails()) {
             return $this->send_error($validator->errors()->first(), 422);

@@ -34,6 +34,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::put('users/{id}', [APIUserController::class, "update_user"]);
     Route::delete('users', [APIUserController::class, "delete_user"]);
     Route::get("sale-admins", [APIUserController::class, "get_sale_admins"]);
+    Route::delete("sale-admins/{id}", [APIUserController::class, "delete_sale_admin"]);
     Route::get("dsms", [APIUserController::class, "get_dsms"]);
     Route::get("sale-executives", [APIUserController::class, "get_sales"]);
     Route::apiResource('packages', APIPackageController::class);
