@@ -4,7 +4,7 @@ namespace Database\Seeders;
 
 use App\Models\Customer;
 use App\Models\Industry;
-use App\Models\KpiActivity;
+use App\Models\KPIActivity;
 use App\Models\Package;
 use App\Models\Pipeline;
 use App\Models\Territory;
@@ -24,7 +24,7 @@ class CustomerSeeder extends Seeder
     {
         $customers = [];
 
-        for ($i=0; $i < 500; $i++) {
+        for ($i = 0; $i < 500; $i++) {
             $faker = Factory::create();
             $customers[] = [
                 "id" => Str::uuid(),
@@ -45,7 +45,7 @@ class CustomerSeeder extends Seeder
             $create_customer = Customer::create($customer);
             $territory = Territory::all()->random();
             $industry = Industry::all()->random();
-            $kpi_activity = KpiActivity::all()->random();
+            $kpi_activity = KPIActivity::all()->random();
             $pipeline = Pipeline::whereName(__("pipeline.customer"))->first();
             $package = Package::all()->random();
             if ($territory) {

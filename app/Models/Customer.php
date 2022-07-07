@@ -63,7 +63,7 @@ class Customer extends Model
 
     public function kpi_activity()
     {
-        return $this->belongsTo(KpiActivity::class);
+        return $this->belongsTo(KPIActivity::class);
     }
 
     public function pipeline()
