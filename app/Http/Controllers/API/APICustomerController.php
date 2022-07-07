@@ -58,6 +58,7 @@ class APICustomerController extends APIBaseController
             "territory_id.required" => "Territory is required",
             "pipeline_id.required" => "Pipeline is required",
             "package_id.required" => "Package is required",
+            "kpi_activity_id.required" => "Kpi Activity is required",
             "remark.required" => "Remark is required"
         ]);
         if ($validator->fails()) {

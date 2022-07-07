@@ -6,7 +6,7 @@ use App\Enums\UserRoleType;
 use App\Models\Customer;
 use App\Models\ExistingProvider;
 use App\Models\Industry;
-use App\Models\KpiActivity;
+use App\Models\KPIActivity;
 use App\Models\Package;
 use App\Models\Pipeline;
 use App\Models\Territory;
@@ -63,7 +63,7 @@ class CustomerRepository implements CustomerRepositoryInterface
     {
         $territory = Territory::find($request->get("territory_id"));
         $industry = Industry::find($request->get("industry_id"));
-        $kpi_activity = KpiActivity::find($request->get("kpi_activity_id"));
+        $kpi_activity = KPIActivity::find($request->get("kpi_activity_id"));
         $pipeline = Pipeline::find($request->get("pipeline_id"));
         $package = Package::find($request->get("package_id"));
         $existing_provider = ExistingProvider::find($request->get("existing_id"));
@@ -116,7 +116,7 @@ class CustomerRepository implements CustomerRepositoryInterface
         $customer = Customer::find($id);
         $territory = Territory::find($request->get("territory_id"));
         $industry = Industry::find($request->get("industry_id"));
-        $kpi_activity = KpiActivity::find($request->get("kpi_activity_id"));
+        $kpi_activity = KPIActivity::find($request->get("kpi_activity_id"));
         $pipeline = Pipeline::find($request->get("pipeline_id"));
         $package = Package::find($request->get("package_id"));
         $existing_provider = ExistingProvider::find($request->get("existing_id"));
