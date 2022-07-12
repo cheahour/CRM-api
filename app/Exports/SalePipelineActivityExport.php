@@ -7,16 +7,13 @@ use App\Models\KPIActivity;
 use App\Models\Pipeline;
 use App\Models\User;
 use Auth;
-use Illuminate\Contracts\View\View;
 use Illuminate\Database\Eloquent\Collection;
-use Maatwebsite\Excel\Concerns\FromView;
 use Maatwebsite\Excel\Concerns\ShouldAutoSize;
 use Maatwebsite\Excel\Concerns\WithEvents;
 use PhpOffice\PhpSpreadsheet\Style\Alignment;
 use Maatwebsite\Excel\Events\AfterSheet;
 
 class SalePipelineActivityExport implements
-    FromView,
     ShouldAutoSize,
     WithEvents
 {
@@ -55,17 +52,6 @@ class SalePipelineActivityExport implements
     public function title(): string
     {
         return "Sale Report";
-    }
-
-    public function view(): View
-    {
-        return view("Exports.SalePipelineActivity", [
-            "from_date" => $this->from_date,
-            "to_date" => $this->to_date,
-            "sales" => $this->sales(),
-            "pipelines" => $this->pipelines,
-            "activities" => $this->activities,
-        ]);
     }
 
     public function registerEvents(): array

@@ -3,6 +3,7 @@
 use App\Http\Controllers\API\APICustomerController;
 use App\Http\Controllers\API\APIDashboardController;
 use App\Http\Controllers\API\APIExistingProviderController;
+use App\Http\Controllers\API\APIForgotPasswordController;
 use App\Http\Controllers\API\AuthController;
 use App\Http\Controllers\API\APIRoleController;
 use App\Http\Controllers\API\APIUserController;
@@ -24,8 +25,25 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
+// Authentication
 Route::post("login", [AuthController::class, 'login']);
 Route::post("sales/login", [AuthController::class, "login_as_sale"]);
+// Route::post("forgot-password", [APIForgotPasswordController::class, "forgot_password"]);
+
+// Forgot password
+// Route::post('/resend/email/token', [App\Http\Controllers\RegisterController::class, 'resendPin']);
+// Route::middleware('auth:sanctum')->group(function () {
+//     Route::post('email/verify', [App\Http\Controllers\RegisterController::class, 'verifyEmail']);
+//     Route::middleware('verify.api')->group(function () {
+//         Route::post('/logout', [App\Http\Controllers\LoginController::class, 'logout']);
+//     });
+// });
+
+Route::post('forgot-password', [APIForgotPasswordController::class, 'forgotPassword']);
+Route::post('verify/pin', [APIForgotPasswordController::class, 'verifyPin']);
+Route::post('reset-password', [APIForgotPasswordController::class, 'resetPassword']);
+
+// Feature
 Route::middleware('auth:sanctum')->group(function () {
     Route::get("profile", [APIUserController::class, "get_profile"]);
     Route::delete('logout', [AuthController::class, "logout"]);
@@ -45,11 +63,13 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::apiResource("existing-providers", APIExistingProviderController::class);
 });
 
+//
 Route::middleware('auth:sanctum')->group(function () {
     Route::apiResource('sales/customers', APICustomerController::class);
     Route::get("sales/sales-pipeline", [APICustomerController::class, "get_sales_pipeline"]);
 });
 
+// Dashboard
 Route::middleware('auth:sanctum')->group(function () {
     Route::get("dashboard/summary", [APIDashboardController::class, "dashboard_summary"]);
     Route::get("dashboard/export", [APIDashboardController::class, "export_excel_report"]);
