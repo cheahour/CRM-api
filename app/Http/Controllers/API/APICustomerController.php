@@ -50,16 +50,16 @@ class APICustomerController extends APIBaseController
             "phone_number" => ["required", new PhoneNumber],
             "phone_number" => "unique:customers,phone_number",
             "pipeline_id" => "required",
+            "kpi_activity_id" => "required",
             "territory_id" => "required",
             "package_id" => "required",
-            "kpi_activity_id" => "required",
             "remark" => "required",
         ], [
             "name.required" => "Name is required",
             "territory_id.required" => "Territory is required",
             "pipeline_id.required" => "Pipeline is required",
+            "kpi_activity_id.required" => "KPI Activity is required",
             "package_id.required" => "Package is required",
-            "kpi_activity_id.required" => "Kpi Activity is required",
             "remark.required" => "Remark is required"
         ]);
         if ($validator->fails()) {
@@ -100,14 +100,16 @@ class APICustomerController extends APIBaseController
             "name" => "required|unique:customers,name," . $id,
             "phone_number" => ["required", new PhoneNumber],
             "phone_number" => "unique:customers,phone_number," . $id,
-            "territory_id" => "required",
             "pipeline_id" => "required",
+            "kpi_activity_id" => "required",
+            "territory_id" => "required",
             "package_id" => "required",
             "remark" => "required",
         ], [
             "name.required" => "Name is required",
             "territory_id.required" => "Territory is required",
             "pipeline_id.required" => "Pipeline is required",
+            "kpi_activity_id.required" => "KPI Activity is required",
             "package_id.required" => "Package is required",
             "remark.required" => "Remark is required"
         ]);
