@@ -28,16 +28,6 @@ use Illuminate\Support\Facades\Route;
 // Authentication
 Route::post("login", [AuthController::class, 'login']);
 Route::post("sales/login", [AuthController::class, "login_as_sale"]);
-// Route::post("forgot-password", [APIForgotPasswordController::class, "forgot_password"]);
-
-// Forgot password
-// Route::post('/resend/email/token', [App\Http\Controllers\RegisterController::class, 'resendPin']);
-// Route::middleware('auth:sanctum')->group(function () {
-//     Route::post('email/verify', [App\Http\Controllers\RegisterController::class, 'verifyEmail']);
-//     Route::middleware('verify.api')->group(function () {
-//         Route::post('/logout', [App\Http\Controllers\LoginController::class, 'logout']);
-//     });
-// });
 
 Route::post('forgot-password', [APIForgotPasswordController::class, 'forgotPassword']);
 Route::post('verify/pin', [APIForgotPasswordController::class, 'verifyPin']);
@@ -73,4 +63,6 @@ Route::middleware('auth:sanctum')->group(function () {
 Route::middleware('auth:sanctum')->group(function () {
     Route::get("dashboard/summary", [APIDashboardController::class, "dashboard_summary"]);
     Route::get("dashboard/export", [APIDashboardController::class, "export_excel_report"]);
+    Route::get("dashboard/sales-summary", [APIDashboardController::class, "getSalesSummary"]);
+    Route::get("dashboard/sale-leads", [APIDashboardController::class, "getSaleLeads"]);
 });

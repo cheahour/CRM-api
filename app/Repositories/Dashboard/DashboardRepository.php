@@ -7,12 +7,14 @@ use App\Exports\SalesExport;
 use App\Http\Resources\Setting\SettingResource;
 use App\Http\Resources\User\UserResource;
 use App\Models\Customer;
+use App\Models\KPIActivity;
 use App\Models\Package;
 use App\Models\Pipeline;
 use App\Models\Territory;
 use App\Models\User;
 use App\Repositories\Dashboard\DashboardRepositoryInterface;
 use Auth;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Maatwebsite\Excel\Facades\Excel;
 
@@ -28,7 +30,6 @@ class DashboardRepository implements DashboardRepositoryInterface
         if ($role->is(UserRoleType::HeadSale) || $role->is(UserRoleType::SaleAdmin)) {
             return User::sales()
                 ->map(function ($sale) use ($from_date, $to_date) {
-                    // dd($sale->customers());
                     return [
                         "data" => new UserResource($sale),
                         "count" => $sale
@@ -315,5 +316,85 @@ class DashboardRepository implements DashboardRepositoryInterface
             ),
             "sales_pipeline_report.xlsx"
         );
+    }
+
+    function getSalesSummary(Request $request)
+    {
+        $user = auth()->user();
+        $role = UserRoleType::fromValue($user->role->name);
+        $fromDate = $request->date("fromDate");
+        $toDate = $request->date("toDate");
+        if ($role->is(UserRoleType::HeadSale) || $role->is(UserRoleType::SaleAdmin)) {
+            $pipelines = Pipeline::all()
+                ->map(function ($item, $key) use ($fromDate, $toDate) {
+                    return [
+                        "data" => $item,
+                        "count" => $item
+                            ->customers()
+                            ->whereBetween("updated_at", [$fromDate, $toDate])
+                            ->count()
+                    ];
+                });
+
+            $activities = KPIActivity::all()
+                ->map(function ($item, $key) use ($fromDate, $toDate) {
+                    return [
+                        "data" => $item,
+                        "count" => $item
+                            ->customers()
+                            ->whereBetween("updated_at", [$fromDate, $toDate])
+                            ->count()
+                    ];
+                });
+            return [
+                "pipelines" => $pipelines,
+                "kpiActivities" => $activities
+            ];
+        }
+    }
+
+    public function getSaleLeads(Request $request)
+    {
+        $user = auth()->user();
+        $role = UserRoleType::fromValue($user->role->name);
+        $userId = $request->get("userId");
+        $fromDate = $request->date("fromDate");
+        $toDate = $request->date("toDate");
+        $pipelineId = $request->get("pipelineId");
+        $kpiActivityId = $request->get("kpiActivityId");
+        $territoryId = $request->get("territoryId");
+        $existingProviderId = $request->get("existingProviderId");
+        $packageId = $request->get("packageId");
+        if ($role->is(UserRoleType::Sale)) {
+            $sales = auth()->user()
+                ->customers();
+            if ($fromDate && $toDate) {
+                $sales = $sales
+                    ->whereBetween("updated_at", [$fromDate, $toDate]);
+            }
+            if ($pipelineId) {
+                $sales = $sales
+                    ->where("pipeline_id", $pipelineId);
+            }
+            if ($kpiActivityId) {
+                $sales = $sales
+                    ->where("kpi_activity_id", $kpiActivityId);
+            }
+            if ($territoryId) {
+                $sales = $sales
+                    ->where("territory_id", $territoryId);
+            }
+            if ($existingProviderId) {
+                $sales = $sales
+                    ->where("existing_provider_id", $existingProviderId);
+            }
+            if ($packageId) {
+                $sales = $sales
+                    ->where("package_id", $packageId);
+            }
+            $sales = $sales
+                ->paginate(20);
+            return $sales;
+        }
     }
 }

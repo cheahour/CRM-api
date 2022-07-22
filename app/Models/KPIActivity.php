@@ -21,6 +21,6 @@ class KPIActivity extends Model
 
     public function customers()
     {
-        return $this->hasMany(Customer::class);
+        return $this->hasMany(Customer::class, "kpi_activity_id");
     }
 }

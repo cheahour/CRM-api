@@ -17,7 +17,6 @@ use Illuminate\Support\Str;
 
 class CustomerRepository implements CustomerRepositoryInterface
 {
-    private UserRoleType $role;
 
     public function get_sales_pipeline(Request $request)
     {

@@ -46,8 +46,9 @@ class APICustomerController extends APIBaseController
     public function store(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            "name" => "required",
+            "name" => "required|unique:customers,name",
             "phone_number" => ["required", new PhoneNumber],
+            "phone_number" => "unique:customers,phone_number",
             "pipeline_id" => "required",
             "territory_id" => "required",
             "package_id" => "required",
@@ -96,8 +97,9 @@ class APICustomerController extends APIBaseController
     public function update(Request $request, $id)
     {
         $validator = Validator::make($request->all(), [
-            "name" => "required",
+            "name" => "required|unique:customers,name," . $id,
             "phone_number" => ["required", new PhoneNumber],
+            "phone_number" => "unique:customers,phone_number," . $id,
             "territory_id" => "required",
             "pipeline_id" => "required",
             "package_id" => "required",
