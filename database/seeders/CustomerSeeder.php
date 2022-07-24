@@ -3,6 +3,7 @@
 namespace Database\Seeders;
 
 use App\Models\Customer;
+use App\Models\ExistingProvider;
 use App\Models\Industry;
 use App\Models\KPIActivity;
 use App\Models\Package;
@@ -46,8 +47,9 @@ class CustomerSeeder extends Seeder
             $territory = Territory::all()->random();
             $industry = Industry::all()->random();
             $kpi_activity = KPIActivity::all()->random();
-            $pipeline = Pipeline::whereName(__("pipeline.customer"))->first();
+            $pipeline = Pipeline::all()->random();
             $package = Package::all()->random();
+            $existingProvider = ExistingProvider::all()->random();
             if ($territory) {
                 $create_customer->territory()->associate($territory)->save();
             }
@@ -62,6 +64,9 @@ class CustomerSeeder extends Seeder
             }
             if ($package) {
                 $create_customer->package()->associate($package)->save();
+            }
+            if ($existingProvider) {
+                $create_customer->existing_provider()->associate($existingProvider)->save();
             }
         }
     }
