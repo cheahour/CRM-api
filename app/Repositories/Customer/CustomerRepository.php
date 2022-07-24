@@ -22,19 +22,14 @@ class CustomerRepository implements CustomerRepositoryInterface
     {
         $this->role = UserRoleType::fromValue(auth()->user()->role->name);
         $limit = $request->query("limit");
-        $customer_pipeline = Pipeline::whereName(__("pipeline.customer"))->first();
-        if ($customer_pipeline) {
-            if ($this->role->is(UserRoleType::Sale)) {
-                return Auth::user()
-                    ->customers()
-                    ->orderBy("name")
-                    ->where("pipeline_id", "!=", $customer_pipeline->id)
-                    ->paginate($limit);
-            } else {
-                return Customer::orderBy("name")
-                    ->where("pipeline_id", "!=", $customer_pipeline->id)
-                    ->paginate($limit);
-            }
+        if ($this->role->is(UserRoleType::Sale)) {
+            return Auth::user()
+                ->customers()
+                ->orderBy("name")
+                ->paginate($limit);
+        } else {
+            return Customer::orderBy("name")
+                ->paginate($limit);
         }
     }
 
