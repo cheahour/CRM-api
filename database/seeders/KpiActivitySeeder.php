@@ -19,23 +19,23 @@ class KpiActivitySeeder extends Seeder
         DB::table('kpi_activities')->insert([
             [
                 'id' => Str::uuid(),
-                'name' => 'Quoted',
-                'score' => 2,
-            ],
-            [
-                'id' => Str::uuid(),
-                'name' => 'Follow up',
-                'score' => 5,
-            ],
-            [
-                'id' => Str::uuid(),
-                'name' => 'Cold call',
-                'score' => 10,
+                'name' => 'Cold Call',
+                'score' => 1,
             ],
             [
                 'id' => Str::uuid(),
                 'name' => 'Meeting',
-                'score' => 20,
+                'score' => 1,
+            ],
+            [
+                'id' => Str::uuid(),
+                'name' => 'Quoted',
+                'score' => 1,
+            ],
+            [
+                'id' => Str::uuid(),
+                'name' => 'Follow up',
+                'score' => 1,
             ],
         ]);
     }

@@ -16,7 +16,8 @@ class Territory extends Model
         'name',
     ];
 
-    public function customer() {
+    public function customers()
+    {
         return $this->hasMany(Customer::class);
     }
 }

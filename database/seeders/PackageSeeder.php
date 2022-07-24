@@ -19,15 +19,37 @@ class PackageSeeder extends Seeder
             [
                 'id' => Str::uuid(),
                 'name' => 'Today Fiber',
-            ],
-            [
+            ], [
                 'id' => Str::uuid(),
-                'name' => 'Today Fiber plus',
-            ],
-            [
+                'name' => 'Today Fiber Plus',
+            ], [
                 'id' => Str::uuid(),
-                'name' => 'Today Simply fast',
-            ],
+                'name' => 'TODAY Fiber home',
+            ], [
+                'id' => Str::uuid(),
+                'name' => 'TODAY SimplyFast',
+            ], [
+                'id' => Str::uuid(),
+                'name' => 'BBI',
+            ], [
+                'id' => Str::uuid(),
+                'name' => 'L2 VPN',
+            ], [
+                'id' => Str::uuid(),
+                'name' => 'DBI',
+            ], [
+                'id' => Str::uuid(),
+                'name' => 'DBI+',
+            ], [
+                'id' => Str::uuid(),
+                'name' => 'TODAY Dark Fiber',
+            ], [
+                'id' => Str::uuid(),
+                'name' => 'Network Solution',
+            ], [
+                'id' => Str::uuid(),
+                'name' => 'Equipment',
+            ]
         ]);
     }
 }

@@ -128,7 +128,7 @@ class DashboardRepository implements DashboardRepositoryInterface
         $to_date = $request->date("to_date");
 
         if ($role->is(UserRoleType::HeadSale) || $role->is(UserRoleType::SaleAdmin)) {
-            return Customer::filterPipeline(__("pipeline.customer"))
+            return Customer::all()
                 ->whereBetween("updated_at", [$from_date, $to_date])
                 ->groupBy("payment_term")
                 ->map(function ($customers, $term) {
@@ -187,18 +187,16 @@ class DashboardRepository implements DashboardRepositoryInterface
         $to_date = $request->date("to_date");
 
         if ($role->is(UserRoleType::HeadSale) || $role->is(UserRoleType::SaleAdmin)) {
-            return Customer::filterPipeline(__("pipeline.customer"))
-                ->whereBetween("updated_at", [$from_date, $to_date])
-                ->groupBy("package_id")
-                ->map(function ($customers, $id) use ($from_date, $to_date) {
-                    $package = Package::find($id);
+            return Package::all()
+                ->map(function ($item, $key) use ($from_date, $to_date) {
                     return [
-                        "data" => new SettingResource($package),
-                        "count" => $customers
+                        "data" => $item,
+                        "count" => $item
+                            ->customers()
+                            ->whereBetween("updated_at", [$from_date, $to_date])
                             ->count()
                     ];
-                })
-                ->values();
+                });
         } else if ($role->is(UserRoleType::DSM)) {
             $collection = collect();
             $customers = Auth::user()
@@ -250,18 +248,16 @@ class DashboardRepository implements DashboardRepositoryInterface
         $to_date = $request->date("to_date");
 
         if ($role->is(UserRoleType::HeadSale) || $role->is(UserRoleType::SaleAdmin)) {
-            return Customer::filterPipeline(__("pipeline.customer"))
-                ->whereBetween("updated_at", [$from_date, $to_date])
-                ->groupBy("territory_id")
-                ->map(function ($customers, $id) {
-                    $territory = Territory::find($id);
+            return Territory::all()
+                ->map(function ($item, $key) use ($from_date, $to_date) {
                     return [
-                        "data" => new SettingResource($territory),
-                        "count" => $customers
+                        "data" => $item,
+                        "count" => $item
+                            ->customers()
+                            ->whereBetween("updated_at", [$from_date, $to_date])
                             ->count()
                     ];
-                })
-                ->values();
+                });
         } else if ($role->is(UserRoleType::DSM)) {
             $collection = collect();
             $customers = Auth::user()
@@ -363,6 +359,7 @@ class DashboardRepository implements DashboardRepositoryInterface
         $pipelineId = $request->get("pipelineId");
         $kpiActivityId = $request->get("kpiActivityId");
         $territoryId = $request->get("territoryId");
+        $industryId = $request->get("industryId");
         $existingProviderId = $request->get("existingProviderId");
         $packageId = $request->get("packageId");
         if ($role->is(UserRoleType::Sale)) {
@@ -383,6 +380,10 @@ class DashboardRepository implements DashboardRepositoryInterface
             if ($territoryId) {
                 $sales = $sales
                     ->where("territory_id", $territoryId);
+            }
+            if ($industryId) {
+                $sales = $sales
+                    ->where("industry_id", $industryId);
             }
             if ($existingProviderId) {
                 $sales = $sales
